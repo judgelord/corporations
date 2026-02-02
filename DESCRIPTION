@@ -1,16 +1,18 @@
 Package: corporations
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Pattern-Based Extraction to Link Records on Corporations From a Premade Lookup Table
 Version: 0.1.0
 Authors@R: c(
-    person(
-      "Jane", "Doe",
-      email = "jane@example.com",
-      role = c("aut", "cre")
-    )
+    person("Steven", "Kang", email = "stevenhk@umich.edu", role = c("aut", "cre"))
+    person("Devin", "Judge-Lord", role = c("aut"))
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: This package allows social scientists to easily link records on corporations where they 
+    may go by different names and unique identifiers that do not exist. It will also allow the creation 
+    of new datasets of corporation behavior by identifying corporation names in unstructured text and linking 
+    these mentions to other datasets (for example, linking mentions of corporations in politicians’ speeches 
+    with campaign donation data). 
+License: MIT LICENSE
 Encoding: UTF-8
 LazyData: true
+URL: https://github.com/judgelord/corporations
+BugReports: https://github.com/judgelord/corporations/issues
