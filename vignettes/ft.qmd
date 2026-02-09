@@ -1,0 +1,48 @@
+---
+title: "Financial Times"
+author: "Devin Judge-Lord"
+format: html
+editor: source
+vignette: >
+  %\VignetteIndexEntry{Financial Times}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Find corporation names in messy text with typos and inconsistent name formats
+
+## load packages
+
+Install this package with 
+```
+devtools::install_github("judgelord/corporations")
+```
+
+```{r, eval=FALSE}
+library(corporations)
+```
+
+
+This vignette also uses `rvest`.
+
+```{r, message=FALSE}
+library(rvest) # for web scraping 
+```
+
+## Corporations Mentioned on the Financial Times business page
+
+Using `rvest` we scrape the ft.com and get all linked stories.  
+
+```{r}
+html <- read_html("https://www.ft.com/companies") # The FT homepage
+links <- html_nodes(html, "a") # "a" nodes are linked text
+
+ft <- html_text(links)
+
+ft[35:45]
+```
+
+```{r, eval=FALSE}
+corporations::extract(ft) |> 
+  dplyr::drop_na()
+```
