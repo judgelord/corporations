@@ -14,5 +14,10 @@ Description: This package allows social scientists to easily link records on cor
 License: MIT LICENSE
 Encoding: UTF-8
 LazyData: true
+Imports: 
+    regextable
+Remotes: 
+    judgelord/regextable
 URL: https://github.com/judgelord/corporations
 BugReports: https://github.com/judgelord/corporations/issues
+RoxygenNote: 7.3.3
