@@ -25,9 +25,6 @@ corporations_extract <- function(input_data,
   # corporations_data was saved via usethis::corporations_data.
   regex_lookup <- corporations_data
   regex_lookup$pattern <- regex_lookup$aliases
-  # # Use new cleaning function to create the 'pattern' column
-  # if (verbose) message("Cleaning aliases for matching...")
-  # regex_lookup$pattern <- vapply(regex_lookup$aliases, clean_org_alias, character(1))
 
   # Call the regextable dependency
   result <- regextable::extract(
