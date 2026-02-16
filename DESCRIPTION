@@ -22,3 +22,5 @@ Remotes:
 URL: https://github.com/judgelord/corporations
 BugReports: https://github.com/judgelord/corporations/issues
 RoxygenNote: 7.3.3
+Depends: 
+    R (>= 3.5)

@@ -2,4 +2,5 @@
 
 export(clean_org_alias)
 export(corporations_extract)
+export(filter_corporations)
 import(stringr)
