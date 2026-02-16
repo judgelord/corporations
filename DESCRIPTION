@@ -3,8 +3,8 @@ Type: Package
 Title: Pattern-Based Extraction to Link Records on Corporations From a Premade Lookup Table
 Version: 0.1.0
 Authors@R: c(
-    person("Steven", "Kang", email = "stevenhk@umich.edu", role = c("aut", "cre"))
-    person("Devin", "Judge-Lord", role = c("aut"))
+    person("Steven", "Kang", email = "stevenhk@umich.edu", role = c("aut", "cre")),
+    person("Second", "Author", role = "aut")
   )
 Description: This package allows social scientists to easily link records on corporations where they 
     may go by different names and unique identifiers that do not exist. It will also allow the creation 

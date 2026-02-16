@@ -17,9 +17,10 @@
 filter_corporations <- function(naics_codes = NULL,
                                 public_only = FALSE,
                                 corporations_return_cols = c("aliases", "cik", "FED_RSSD"),
-                                ...) {
+                                search_term = NULL
+                                ) {
 
-  corporations_filter <- corporations_data
+  corporations_filter <- corporations_data_sample
 
   # Filter by NAICS (Optional)
   if (!is.null(naics_codes)) {

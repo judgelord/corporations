@@ -8,7 +8,7 @@ filter_corporations(
   naics_codes = NULL,
   public_only = FALSE,
   corporations_return_cols = c("aliases", "cik", "FED_RSSD"),
-  ...
+  search_term = NULL
 )
 }
 \arguments{
