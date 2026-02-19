@@ -20,6 +20,7 @@ filter_corporations <- function(naics_codes = NULL,
                                 search_term = NULL
                                 ) {
 
+  # using sample data
   corporations_filter <- corporations_data_sample
 
   # Filter by NAICS (Optional)

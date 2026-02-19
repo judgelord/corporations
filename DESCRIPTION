@@ -15,6 +15,7 @@ License: MIT LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
+    dplyr,
     regextable,
     stringr
 Remotes: 

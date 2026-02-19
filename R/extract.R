@@ -14,6 +14,9 @@
 #' @return A tibble with columns: `row_id`, selected `data` columns, selected `regex_return_cols`,
 #' `pattern`, and `match`.
 #' @export
+#' @importFrom dplyr mutate
+#' @importFrom dplyr sample_frac
+#' @importFrom pbapply pbsapply
 corporations_extract <- function(input_data,
                                  col_name = "text",
                                  data_return_cols = NULL,
@@ -24,7 +27,20 @@ corporations_extract <- function(input_data,
 
   # corporations_data was saved via usethis::corporations_data.
   regex_lookup <- corporations_data
+  # regex_lookup <- corporations_data %>% sample_frac(0.5)
+  #
+  # if (verbose) {
+  #   message("Step 1/3: Standardizing corporation database aliases...")
+  # }
+  #
+  # # pbsapply provides the progress bar ("pb" stands for Progress Bar)
+  # regex_lookup$pattern <- pbapply::pbsapply(
+  #   regex_lookup$aliases,
+  #   clean_org_alias,
+  #   cl = cl
+  # )
   regex_lookup$pattern <- regex_lookup$aliases
+
 
   # Call the regextable dependency
   result <- regextable::extract(
@@ -35,7 +51,7 @@ corporations_extract <- function(input_data,
     regex_return_cols = regex_return_cols,
     remove_acronyms = remove_acronyms,
     verbose = verbose,
-    cl = cl
+    cl = cl,
   )
 
   return(result)
