@@ -43,6 +43,6 @@ ft[35:45]
 ```
 
 ```{r, eval=FALSE}
-corporations::extract(ft) |> 
+corporations::corporations_extract(ft) |> 
   dplyr::drop_na()
 ```

@@ -27,8 +27,8 @@ corporations_extract <- function(input_data,
 
   # corporations_data was saved via usethis::corporations_data.
   regex_lookup <- corporations_data
-  # regex_lookup <- corporations_data %>% sample_frac(0.5)
-  #
+  # regex_lookup <- corporations_data %>% sample_frac(0.2)
+
   # if (verbose) {
   #   message("Step 1/3: Standardizing corporation database aliases...")
   # }

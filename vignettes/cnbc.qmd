@@ -1,0 +1,49 @@
+---
+title: "CNBC"
+author: "Steven Kang"
+format: html
+editor: source
+vignette: >
+  %\VignetteIndexEntry{Reuters}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Find corporation names in messy website text with inconsistent name formats of the latest CNBC business news headlines
+
+## load packages
+
+```r
+devtools::install_github("judgelord/corporations")
+```
+
+```{r, eval=FALSE}
+library(corporations)
+```
+
+
+This vignette also uses `rvest`.
+
+```{r, message=FALSE}
+library(rvest) # for web scraping 
+```
+
+## Corporations Mentioned on the CNBC business page
+
+Using `rvest` we scrape the cnbc.com and get all linked stories.  
+
+```{r}
+html <- read_html("https://www.cnbc.com/business/") # The CNBC Business page
+links <- html_nodes(html, "a") # "a" nodes are linked text
+
+cnbc <- html_text(links)
+
+cnbc[120:150]
+```
+
+```{r, eval=FALSE}
+corporations::corporations_extract(cnbc) |> 
+  dplyr::drop_na()
+```
+
+
