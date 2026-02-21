@@ -1,0 +1,62 @@
+---
+# title: "corporations: pattern-based text extraction of corporation names in unstructured text and filtering of corporations"
+format: gfm
+editor-options: 
+  chunk-output-type: console
+execute:
+  eval: true
+  echo: true
+---
+
+<!--DO NOT EDIT .md file, only README.qmd--> 
+
+```{r}
+#| include: false
+devtools::load_all(".")
+knitr::opts_chunk$set(
+  cache = FALSE,
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  tidy = FALSE,
+  fig.align = "center",
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  R.options = list(width = 120)
+)
+```
+
+## Description 
+
+`corporations` extracts regular-expression-based pattern matches from a vector of text using a built-in extensive crosswalk table of corporations. This includes companies with a central index key (a unique 10-digit, permanent identification number assigned by the U.S. Securities and Exchange Commission), Compustat (database managed by the S&P Global Market Intelligence), and FDIC-insured companies. The corprations_extract function requires one inputs
+
+1. `input_data`: A vector of text to search (typically a data frame with a `text` column)
+
+For each matching substring, `corprations::corporations_extract` returns 
+
+- the row number of `data`  
+- the `pattern` 
+- the matched substring
+- Optionally, other columns in `input_data` or the `corporations_data`
+
+## Installation
+
+```         
+devtools::install_github("judgelord/corporations")
+```
+
+```{r, message=FALSE}
+library(corporations)
+```
+
+## Data
+
+The examples below use an subset of the corporations_data crosswalk table of members of corporations and a example text data from the listed contributors in Project 2025's "Mandate for Leadership: The Conservative Promise". 
+
+```{r}
+data("project_2025_coalition_and_contributors")
+head(project_2025_coalition_and_contributors)
+
+data("corporations_data_sample")
+head(corporations_data_sample)
+```
