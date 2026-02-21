@@ -2,6 +2,8 @@
 
 <!--DO NOT EDIT .md file, only README.qmd-->
 
+# corporations
+
 ## Description
 
 `corporations` extracts regular-expression-based pattern matches from a
