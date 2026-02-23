@@ -29,11 +29,11 @@ knitr::opts_chunk$set(
 
 ## Description 
 
-`corporations` extracts regular-expression-based pattern matches from a vector of text using a built-in extensive crosswalk table of corporations. This includes companies with a central index key (a unique 10-digit, permanent identification number assigned by the U.S. Securities and Exchange Commission), Compustat (database managed by the S&P Global Market Intelligence), and FDIC-insured companies. The corprations_extract function requires one inputs
+The `corporations` extract function is a regular-expression-based pattern matches from a vector of text using a built-in extensive crosswalk table of corporations. This includes companies with a central index key (a unique 10-digit, permanent identification number assigned by the U.S. Securities and Exchange Commission), Compustat (database managed by the S&P Global Market Intelligence), and FDIC-insured companies. The corprations_extract function requires one inputs
 
 1. `input_data`: A vector of text to search (typically a data frame with a `text` column)
 
-For each matching substring, `corprations::corporations_extract` returns 
+For each matching substring, `corprations::extract` returns 
 
 - the row number of `data`  
 - the `pattern` 

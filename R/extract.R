@@ -8,7 +8,9 @@
 #' @param regex_return_cols Optional vector of column names to include from the
 #' built-in corporations data (e.g., "FED_RSSD", "CIK").
 #' @param remove_acronyms Logical; if TRUE, removes all-uppercase patterns from the search.
+#' @param do_clean_text Logical; if TRUE, applies basic text cleaning to the input before matching.
 #' @param verbose Logical; if TRUE, displays progress messages.
+#' @param unique_match Logical; if TRUE, stops searching after first match to find at most one match per row. If FALSE, returns all matches for all patterns.
 #' @param cl A cluster object or integer for parallel evaluation via [pbapply::pblapply()].
 #'
 #' @return A tibble with columns: `row_id`, selected `data` columns, selected `regex_return_cols`,
@@ -17,40 +19,34 @@
 #' @importFrom dplyr mutate
 #' @importFrom dplyr sample_frac
 #' @importFrom pbapply pbsapply
-corporations_extract <- function(input_data,
-                                 col_name = "text",
-                                 data_return_cols = NULL,
-                                 regex_return_cols = NULL,
-                                 remove_acronyms = FALSE,
-                                 verbose = TRUE,
-                                 cl = NULL) {
+extract <- function(data,
+                   col_name = "text",
+                   data_return_cols = NULL,
+                   regex_return_cols = NULL,
+                   remove_acronyms = FALSE,
+                   do_clean_text = TRUE,
+                   verbose = TRUE,
+                   unique_match = FALSE,
+                   cl = NULL) {
 
   # corporations_data was saved via usethis::corporations_data.
   regex_lookup <- corporations_data
-  # regex_lookup <- corporations_data %>% sample_frac(0.2)
-
-  # if (verbose) {
-  #   message("Step 1/3: Standardizing corporation database aliases...")
-  # }
-  #
-  # # pbsapply provides the progress bar ("pb" stands for Progress Bar)
-  # regex_lookup$pattern <- pbapply::pbsapply(
-  #   regex_lookup$aliases,
-  #   clean_org_alias,
-  #   cl = cl
-  # )
-  regex_lookup$pattern <- regex_lookup$aliases
+  regex_lookup <- regex_lookup[nchar(regex_lookup$aliases) > 1, ]
+  regex_lookup$pattern <- paste0("\\b(?:", regex_lookup$aliases, ")\\b")
 
 
   # Call the regextable dependency
   result <- regextable::extract(
-    data = input_data,
+    data = data,
     regex_table = regex_lookup,
     col_name = col_name,
+    pattern_col = "pattern",
     data_return_cols = data_return_cols,
     regex_return_cols = regex_return_cols,
     remove_acronyms = remove_acronyms,
+    do_clean_text = do_clean_text,
     verbose = verbose,
+    unique_match = unique_match,
     cl = cl,
   )
 

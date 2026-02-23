@@ -42,7 +42,7 @@ cnbc[120:150]
 ```
 
 ```{r, eval=FALSE}
-corporations::corporations_extract(cnbc) |> 
+corporations::extract(cnbc) |> 
   dplyr::drop_na()
 ```
 
