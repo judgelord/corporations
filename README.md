@@ -144,7 +144,7 @@ A data frame with one row per match, including:
 
 The simplest use of `extract()` with only the required arguments and
 returned columns specified. This finds all matches in the text column
-using the provided regex table.
+using the `corporations_data`.
 
 ``` r
 #Extract patterns using only required arguments

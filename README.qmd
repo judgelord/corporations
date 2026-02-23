@@ -109,7 +109,7 @@ A data frame with one row per match, including:
 ### Basic Usage
 
 The simplest use of `extract()` with only the required arguments and returned columns specified. 
-This finds all matches in the text column using the provided regex table.
+This finds all matches in the text column using the `corporations_data`.
 
 ```{r}
 #Extract patterns using only required arguments
