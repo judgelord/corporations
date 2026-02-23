@@ -38,6 +38,7 @@ For each matching substring, `corprations::extract` returns
 - the row number of `data`  
 - the `pattern` 
 - the matched substring
+- the confidence score based on Jaro-Winkler fuzzy matching to validate extraction accuracy
 - Optionally, other columns in `input_data` or the `corporations_data`
 
 ## Installation
@@ -61,3 +62,14 @@ head(project_2025_coalition_and_contributors)
 data("corporations_data_sample")
 head(corporations_data_sample)
 ```
+
+## Text cleaning
+
+Before matching, by default, `clean_text()` is applied to standardize text for better matching in messy text. It converts text to lowercase, removes excess punctuation, replaces line breaks and dashes with spaces, and collapses multiple spaces into a single space. Text cleaning is applied only during matching and does not modify the original input data. Users can disable this behavior by setting `do_clean_text = FALSE`.
+
+```{r}
+text <- "  HELLO---WORLD  "
+cleaned_text <- clean_text(text)
+print(cleaned_text)
+```
+

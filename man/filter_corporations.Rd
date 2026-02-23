@@ -16,17 +16,14 @@ filter_corporations(
 
 \item{public_only}{Logical; if TRUE, subsets the dictionary to only include corporations with stock tickers.}
 
-\item{corporations_return_cols}{Optional vector of column names to include from the
-built-in corporations data (e.g., "FED_RSSD", "CIK").}
+\item{corporations_return_cols}{Optional vector of column names to include from the built-in corporations data (e.g., "FED_RSSD", "CIK").}
 
-\item{search_term}{Optional character string; if provided, filters the
-company names using a partial string match (case-insensitive).}
+\item{search_term}{Optional character string; if provided, filters the company names using a partial string match (case-insensitive).}
 
 \item{verbose}{Logical; if TRUE, displays progress messages.}
 }
 \value{
-A tibble containing the filtered subset of the corporations database,
-including columns such as `aliases`, `ticker`, `cik`, and `naics`.
+A tibble containing the filtered subset of the corporations database, including columns such as `aliases`, `ticker`, `cik`, and `naics`.
 }
 \description{
 Creates a subset of corporation data based on particular kinds of corporations that a user

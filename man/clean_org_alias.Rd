@@ -2,17 +2,16 @@
 % Please edit documentation in R/clean_org_alias.R
 \name{clean_org_alias}
 \alias{clean_org_alias}
-\title{Clean Organization Aliases}
+\title{Clean Corporate Suffixes}
 \usage{
-clean_org_alias(name)
+clean_org_alias(x)
 }
 \arguments{
-\item{name}{A character string containing the organization name.}
+\item{x}{A character vector of names.}
 }
 \value{
-A cleaned, lowercase character string.
+A cleaned character vector.
 }
 \description{
-Standardizes organization names by removing corporate suffixes, PDF metadata,
-and normalizing punctuation/whitespace for regex matching.
+Removes common legal suffixes and trailing punctuation from entity names.
 }
