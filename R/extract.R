@@ -40,7 +40,7 @@ extract <- function(data,
   }
   # Pattern Preparation
   raw_aliases <- unlist(pbapply::pblapply(regex_lookup$aliases, clean_org_alias))
-  regex_lookup$pattern <- sapply(strsplit(raw_aliases, "\\|"), function(parts) {
+  regex_lookup$pattern <- pbapply::pbsapply(strsplit(raw_aliases, "\\|"), function(parts) {
     cleaned_parts <- trimws(parts)
     paste(unique(cleaned_parts), collapse = "|")
   }, cl = cl)

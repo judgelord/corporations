@@ -144,24 +144,28 @@ A data frame with one row per match, including:
 ### Basic Usage
 
 The simplest use of `extract()` with only the required arguments and
-returned columns specified. This finds all matches in the text column
-using the `corporations_data`.
+specific return columns specified that demonstrate use cases. This finds
+all matches in the text column using the `corporations_data` and allows
+users to directly link company names with unique identifiers, determine
+which are publicly traded companies, and more.
 
 ``` r
 #Extract patterns using only required arguments
 result <- extract(
   data = project_2025_coalition_and_contributors,
   col_name = "organization",
-  data_return_cols = c("organization")
+  data_return_cols = c("organization"),
+  regex_return_cols = c("cik", "FED_RSSD", "ticker", "naics", "sources")
 )
 
 head(result)
-#> # A tibble: 5 × 5
-#>   row_id organization                    pattern                                               match          similarity
-#>    <int> <chr>                           <chr>                                                 <chr>               <dbl>
-#> 1     47 Patrick Henry College           "\\b(?:patrick henry college)\\b"                     Patrick Henry…      1    
-#> 2     71 Korn Ferry                      "\\b(?:korn ferry international|korn ferry)\\b"       Korn Ferry          1    
-#> 3     76 Booz Allen Hamilton             "\\b(?:booz allen & hamilton|booz allen hamilton)\\b" Booz Allen Ha…      1    
-#> 4     78 River Financial Inc.            "\\b(?:river financial)\\b"                           River Financi…      1    
-#> 5     73 Taft Stettinius & Hollister LLP "\\b(?:taft stettinius & hollister)\\b"               Taft Stettini…      0.957
+#> # A tibble: 6 × 10
+#>   row_id organization                        cik FED_RSSD ticker  naics sources           pattern       match similarity
+#>    <int> <chr>                             <dbl>    <dbl> <chr>   <dbl> <chr>             <chr>         <chr>      <dbl>
+#> 1     47 Patrick Henry College           1205813       NA ""         NA cik               "\\b(?:patri… Patr…      1    
+#> 2     71 Korn Ferry                        56679       NA "KFY"  561311 cik,compustat,sec "\\b(?:korn … Korn…      1    
+#> 3     76 Booz Allen Hamilton               13222       NA ""         NA cik               "\\b(?:booz … Booz…      1    
+#> 4     78 River Financial Inc.            1641601       NA ""         NA cik               "\\b(?:river… Rive…      1    
+#> 5     78 River Financial Inc.            1846407       NA ""         NA cik               "\\b(?:river… Rive…      1    
+#> 6     73 Taft Stettinius & Hollister LLP  909789       NA ""         NA cik               "\\b(?:taft … Taft…      0.957
 ```

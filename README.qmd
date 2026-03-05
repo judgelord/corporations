@@ -108,15 +108,15 @@ A data frame with one row per match, including:
 
 ### Basic Usage
 
-The simplest use of `extract()` with only the required arguments and returned columns specified. 
-This finds all matches in the text column using the `corporations_data`.
+The simplest use of `extract()` with only the required arguments and specific return columns specified that demonstrate use cases. This finds all matches in the text column using the `corporations_data` and allows users to directly link company names with unique identifiers, determine which are publicly traded companies, and more. 
 
 ```{r}
 #Extract patterns using only required arguments
 result <- extract(
   data = project_2025_coalition_and_contributors,
   col_name = "organization",
-  data_return_cols = c("organization")
+  data_return_cols = c("organization"),
+  regex_return_cols = c("cik", "FED_RSSD", "ticker", "naics", "sources")
 )
 
 head(result)
