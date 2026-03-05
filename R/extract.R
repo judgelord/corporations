@@ -32,19 +32,18 @@ extract <- function(data,
   # Setup Data
   regex_lookup <- corporations_data
 
-  if (verbose) {
-    message("Cleaning corporate aliases and removing suffixes...")
-  }
-
   op <- pbapply::pboptions(type = if (verbose) "timer" else "none")
   on.exit(pbapply::pboptions(op))
 
+  if (verbose) {
+    message("Cleaning corporate aliases and removing suffixes...")
+  }
   # Pattern Preparation
   raw_aliases <- unlist(pbapply::pblapply(regex_lookup$aliases, clean_org_alias))
   regex_lookup$pattern <- sapply(strsplit(raw_aliases, "\\|"), function(parts) {
     cleaned_parts <- trimws(parts)
     paste(unique(cleaned_parts), collapse = "|")
-  })
+  }, cl = cl)
 
   regex_lookup <- regex_lookup[nchar(regex_lookup$pattern) > 1, ]
   # Word boundaries to ensure substrings do not match
@@ -67,31 +66,11 @@ extract <- function(data,
 
   if (nrow(result) == 0) return(result)
 
-
   if (verbose) message("Verifying matches via token consistency...")
 
   # Clean input and the match columns for comparison
   result$match_clean <- clean_org_alias(result$match)
   result$input_clean <- clean_org_alias(result[[col_name]])
-
-  # Token verification function
-  # This checks if the unique words in the input are present in the match.
-  verify_tokens <- function(input_str, match_str) {
-    in_tokens <- unlist(strsplit(tolower(input_str), "\\s+"))
-    ma_tokens <- unlist(strsplit(tolower(match_str), "\\s+"))
-
-    # Words to ignore (they don't help distinguish companies)
-    noise <- c("inc", "corp", "ltd", "llc", "co", "company", "limited", "and", "the")
-    in_sig <- setdiff(in_tokens, noise)
-    ma_sig <- setdiff(ma_tokens, noise)
-
-    if (length(in_sig) == 0) return(0)
-
-    # Calculate what percentage of the input's significant words exist in the match
-    # "American Moment" (2 words) -> "American Corp" (1 word match) = 0.50
-    overlap <- length(intersect(in_sig, ma_sig)) / length(in_sig)
-    return(overlap)
-  }
 
   # Apply the Token Check and Jaro-Winkler Similarity
   result$token_score <- mapply(verify_tokens, result$input_clean, result$match_clean)
@@ -110,5 +89,38 @@ extract <- function(data,
   result$input_clean <- NULL
   result$token_score <- NULL
 
+  if (verbose) message("Finished Matching!")
+
   return(result[order(-result$similarity), ])
+}
+
+
+#' @export
+safe_clean_one <- function(x) {
+  if (is.na(x) || is.null(x) || length(x) == 0) return("")
+  txt <- as.character(x[1])
+  cleaned <- tryCatch(clean_org_alias(txt), error = function(e) NULL)
+  if (is.null(cleaned) || length(cleaned) == 0 || all(cleaned == "")) return(txt)
+  return(as.character(cleaned[1]))
+}
+
+
+# Token verification function
+# This checks if the unique words in the input are present in the match.
+#' @export
+verify_tokens <- function(input_str, match_str) {
+  in_tokens <- unlist(strsplit(tolower(input_str), "\\s+"))
+  ma_tokens <- unlist(strsplit(tolower(match_str), "\\s+"))
+
+  # Words to ignore (These do not help distinguish companies)
+  noise <- c("inc", "corp", "ltd", "llc", "co", "company", "limited", "and", "the")
+  in_sig <- setdiff(in_tokens, noise)
+  ma_sig <- setdiff(ma_tokens, noise)
+
+  if (length(in_sig) == 0) return(0)
+
+  # Calculate what percentage of the input's significant words exist in the match
+  # "American Moment" (2 words) -> "American Corp" (1 word match) = 0.50
+  overlap <- length(intersect(in_sig, ma_sig)) / length(in_sig)
+  return(overlap)
 }

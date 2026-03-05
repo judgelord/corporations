@@ -3,6 +3,8 @@
 export(clean_org_alias)
 export(extract)
 export(filter_corporations)
+export(safe_clean_one)
+export(verify_tokens)
 importFrom(dplyr,mutate)
 importFrom(dplyr,sample_frac)
 importFrom(pbapply,pbsapply)
