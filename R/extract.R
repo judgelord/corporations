@@ -6,7 +6,6 @@
 #' @param col_name Column name in the data frame containing text to search through. Default is "text".
 #' @param data_return_cols Optional vector of column names to include from the input 'data'.
 #' @param regex_return_cols Optional vector of column names to include from the built-in corporations data (e.g., "FED_RSSD", "CIK").
-#' @param do_fuzzy_matching Logical; if TRUE, applies fuzzy matching to the regular expression matches and includes another column of confidence scores for the matches.
 #' @param remove_acronyms Logical; if TRUE, removes all-uppercase patterns from the search.
 #' @param do_clean_text Logical; if TRUE, applies basic text cleaning to the input before matching.
 #' @param verbose Logical; if TRUE, displays progress messages.
@@ -21,25 +20,26 @@
 #' @importFrom pbapply pbsapply
 #' @importFrom stringdist stringsim
 extract <- function(data,
-                   col_name = "text",
-                   data_return_cols = NULL,
-                   regex_return_cols = NULL,
-                   do_fuzzy_matching = TRUE,
-                   remove_acronyms = FALSE,
-                   do_clean_text = TRUE,
-                   verbose = TRUE,
-                   unique_match = FALSE,
-                   cl = NULL) {
+                    col_name = "text",
+                    data_return_cols = NULL,
+                    regex_return_cols = NULL,
+                    remove_acronyms = FALSE,
+                    do_clean_text = TRUE,
+                    verbose = TRUE,
+                    unique_match = FALSE,
+                    cl = NULL) {
 
-  # corporations_data was saved via usethis::corporations_data.
+  # Setup Data
   regex_lookup <- corporations_data
 
   if (verbose) {
     message("Cleaning corporate aliases and removing suffixes...")
   }
+
   op <- pbapply::pboptions(type = if (verbose) "timer" else "none")
   on.exit(pbapply::pboptions(op))
 
+  # Pattern Preparation
   raw_aliases <- unlist(pbapply::pblapply(regex_lookup$aliases, clean_org_alias))
   regex_lookup$pattern <- sapply(strsplit(raw_aliases, "\\|"), function(parts) {
     cleaned_parts <- trimws(parts)
@@ -47,12 +47,10 @@ extract <- function(data,
   })
 
   regex_lookup <- regex_lookup[nchar(regex_lookup$pattern) > 1, ]
+  # Word boundaries to ensure substrings do not match
   regex_lookup$pattern <- paste0("\\b(?:", regex_lookup$pattern, ")\\b")
 
-  # regex_lookup <- regex_lookup[nchar(regex_lookup$aliases) > 1, ]
-  # regex_lookup$pattern <- paste0("\\b(?:", regex_lookup$aliases, ")\\b")
-
-  # Call the regextable dependency
+  # Extraction via regextable package
   result <- regextable::extract(
     data = data,
     regex_table = regex_lookup,
@@ -64,32 +62,53 @@ extract <- function(data,
     do_clean_text = do_clean_text,
     verbose = verbose,
     unique_match = unique_match,
-    cl = cl,
+    cl = cl
   )
 
   if (nrow(result) == 0) return(result)
 
-  if (do_fuzzy_matching) {
-    if (verbose) message("Calculating fuzzy match confidence scores...")
 
-    # Clean text found by the regex on the 'match' column and from the col_name column
-    result$match_clean <- clean_org_alias(result$match)
-    result$cleaned_col_name<- clean_org_alias(result[[col_name]])
+  if (verbose) message("Verifying matches via token consistency...")
 
-    result$confidence_score <- stringdist::stringsim(
-      result$cleaned_col_name,   # cleaned text from data
-      result$match_clean, # This is the cleaned version the match
-      method = "jw"
-    )
+  # Clean input and the match columns for comparison
+  result$match_clean <- clean_org_alias(result$match)
+  result$input_clean <- clean_org_alias(result[[col_name]])
 
-    # Remove the temporary cleaning column
-    result$match_clean <- NULL
-    result$cleaned_col_name <- NULL
+  # Token verification function
+  # This checks if the unique words in the input are present in the match.
+  verify_tokens <- function(input_str, match_str) {
+    in_tokens <- unlist(strsplit(tolower(input_str), "\\s+"))
+    ma_tokens <- unlist(strsplit(tolower(match_str), "\\s+"))
 
-    # Return the results ranked by confidence scores
-    return(result[order(-result$confidence_score), ])
+    # Words to ignore (they don't help distinguish companies)
+    noise <- c("inc", "corp", "ltd", "llc", "co", "company", "limited", "and", "the")
+    in_sig <- setdiff(in_tokens, noise)
+    ma_sig <- setdiff(ma_tokens, noise)
+
+    if (length(in_sig) == 0) return(0)
+
+    # Calculate what percentage of the input's significant words exist in the match
+    # "American Moment" (2 words) -> "American Corp" (1 word match) = 0.50
+    overlap <- length(intersect(in_sig, ma_sig)) / length(in_sig)
+    return(overlap)
   }
 
-  return (result)
-}
+  # Apply the Token Check and Jaro-Winkler Similarity
+  result$token_score <- mapply(verify_tokens, result$input_clean, result$match_clean)
 
+  result$similarity <- stringdist::stringsim(
+    result$input_clean,
+    result$match_clean,
+    method = "jw"
+  )
+
+  # Only keep the match if at least 60% of the input tokens match.
+  result <- result[result$token_score >= 0.6, ]
+
+  # Order results based on substring similarity
+  result$match_clean <- NULL
+  result$input_clean <- NULL
+  result$token_score <- NULL
+
+  return(result[order(-result$similarity), ])
+}

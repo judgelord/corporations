@@ -24,8 +24,8 @@ For each matching substring, `corprations::extract` returns
 - the row number of `data`  
 - the `pattern`
 - the matched substring
-- the `confidence_score` based on Jaro-Winkler fuzzy matching to
-  validate extraction accuracy
+- the `confidence_score` based on Jaro-Winkler similarity matching to
+  for result ordering purposes
 - Optionally, other columns in `input_data` or the `corporations_data`
 
 ## Installation
@@ -95,10 +95,11 @@ print(cleaned_text)
 ### Description
 
 `extract()` performs regex-based matching on a text column using the
-corporations lookup table. All patterns that match each row are
-returned, along with the corresponding pattern and optional metadata
-from the corporations table. If multiple patterns match the same text,
-multiple rows are returned, one per match.
+corporations lookup table. All patterns that match each row are first
+filtered based on a token similarity scoring system. Then the matches
+that are confident are returned along with the corresponding pattern and
+optional metadata from the corporations table. If multiple patterns
+match the same text, multiple rows are returned, one per match.
 
 ### Required Parameters
 
@@ -137,8 +138,8 @@ A data frame with one row per match, including:
   specified)
 - `pattern`: the regex pattern matched
 - `match`: the substring matched in the text
-- `confidence_score`: the fuzzy matching score of the matched substring
-  and the text from the input data
+- `simililarity`: this is the similarity matching score based on
+  Jaro-Winkler Similarity of the filtered results for ordering purposes
 
 ### Basic Usage
 
@@ -155,13 +156,12 @@ result <- extract(
 )
 
 head(result)
-#> # A tibble: 6 × 5
-#>   row_id organization                    pattern                                               match    confidence_score
+#> # A tibble: 5 × 5
+#>   row_id organization                    pattern                                               match          similarity
 #>    <int> <chr>                           <chr>                                                 <chr>               <dbl>
-#> 1     47 Patrick Henry College           "\\b(?:patrick henry college)\\b"                     Patrick…            1    
-#> 2     71 Korn Ferry                      "\\b(?:korn ferry international|korn ferry)\\b"       Korn Fe…            1    
-#> 3     76 Booz Allen Hamilton             "\\b(?:booz allen & hamilton|booz allen hamilton)\\b" Booz Al…            1    
-#> 4     78 River Financial Inc.            "\\b(?:river financial)\\b"                           River F…            1    
-#> 5     73 Taft Stettinius & Hollister LLP "\\b(?:taft stettinius & hollister)\\b"               Taft St…            0.957
-#> 6     50 1792 Exchange                   "\\b(?:exchange)\\b"                                  Exchange            0.872
+#> 1     47 Patrick Henry College           "\\b(?:patrick henry college)\\b"                     Patrick Henry…      1    
+#> 2     71 Korn Ferry                      "\\b(?:korn ferry international|korn ferry)\\b"       Korn Ferry          1    
+#> 3     76 Booz Allen Hamilton             "\\b(?:booz allen & hamilton|booz allen hamilton)\\b" Booz Allen Ha…      1    
+#> 4     78 River Financial Inc.            "\\b(?:river financial)\\b"                           River Financi…      1    
+#> 5     73 Taft Stettinius & Hollister LLP "\\b(?:taft stettinius & hollister)\\b"               Taft Stettini…      0.957
 ```

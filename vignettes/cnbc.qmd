@@ -13,18 +13,26 @@ vignette: >
 
 ## load packages
 
-```r
-devtools::install_github("judgelord/corporations")
+```{r}
+#| include: false
+devtools::load_all(".")
+
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+
 ```
 
-```{r, eval=FALSE}
+```{r, message=FALSE}
 library(corporations)
 ```
 
-
 This vignette also uses `rvest`.
 
-```{r, message=FALSE}
+```{r}
 library(rvest) # for web scraping 
 ```
 
@@ -38,12 +46,22 @@ links <- html_nodes(html, "a") # "a" nodes are linked text
 
 cnbc <- html_text(links)
 
-cnbc[120:150]
+cnbc[138:150]
 ```
 
-```{r, eval=FALSE}
-corporations::extract(cnbc) |> 
-  dplyr::drop_na()
+```{r}
+# Load the data as a tibble (dataframe)
+cnbc_df <- data.frame(headline = cnbc, stringsAsFactors = FALSE)
+
+# Run the extract function
+# Note: we tell the function to look in the "headline" column
+results <- extract(
+  data = cnbc_df,
+  col_name = "headline",
+  verbose = TRUE
+ )
+
+head(results)
 ```
 
 

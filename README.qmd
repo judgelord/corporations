@@ -38,7 +38,7 @@ For each matching substring, `corprations::extract` returns
 - the row number of `data`  
 - the `pattern` 
 - the matched substring
-- the `confidence_score` based on Jaro-Winkler fuzzy matching to validate extraction accuracy
+- the `confidence_score` based on Jaro-Winkler similarity matching to for result ordering purposes
 - Optionally, other columns in `input_data` or the `corporations_data`
 
 ## Installation
@@ -77,7 +77,7 @@ print(cleaned_text)
 
 ### Description
 
-`extract()` performs regex-based matching on a text column using the corporations lookup table. All patterns that match each row are returned, along with the corresponding pattern and optional metadata from the corporations table. If multiple patterns match the same text, multiple rows are returned, one per match.
+`extract()` performs regex-based matching on a text column using the corporations lookup table. All patterns that match each row are first filtered based on a token similarity scoring system. Then the matches that are confident are returned along with the corresponding pattern and optional metadata from the corporations table. If multiple patterns match the same text, multiple rows are returned, one per match.
 
 ### Required Parameters
 
@@ -104,7 +104,7 @@ A data frame with one row per match, including:
 - Optional columns from `corporations_data` (if regex_return_cols specified)
 - `pattern`: the regex pattern matched
 - `match`: the substring matched in the text
-- `confidence_score`: the fuzzy matching score of the matched substring and the text from the input data
+- `simililarity`: this is the similarity matching score based on Jaro-Winkler Similarity of the filtered results for ordering purposes
 
 ### Basic Usage
 

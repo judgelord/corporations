@@ -9,7 +9,6 @@ extract(
   col_name = "text",
   data_return_cols = NULL,
   regex_return_cols = NULL,
-  do_fuzzy_matching = TRUE,
   remove_acronyms = FALSE,
   do_clean_text = TRUE,
   verbose = TRUE,
@@ -25,8 +24,6 @@ extract(
 \item{data_return_cols}{Optional vector of column names to include from the input 'data'.}
 
 \item{regex_return_cols}{Optional vector of column names to include from the built-in corporations data (e.g., "FED_RSSD", "CIK").}
-
-\item{do_fuzzy_matching}{Logical; if TRUE, applies fuzzy matching to the regular expression matches and includes another column of confidence scores for the matches.}
 
 \item{remove_acronyms}{Logical; if TRUE, removes all-uppercase patterns from the search.}
 
