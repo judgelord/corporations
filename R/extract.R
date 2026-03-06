@@ -94,17 +94,6 @@ extract <- function(data,
   return(result[order(-result$similarity), ])
 }
 
-
-#' @export
-safe_clean_one <- function(x) {
-  if (is.na(x) || is.null(x) || length(x) == 0) return("")
-  txt <- as.character(x[1])
-  cleaned <- tryCatch(clean_org_alias(txt), error = function(e) NULL)
-  if (is.null(cleaned) || length(cleaned) == 0 || all(cleaned == "")) return(txt)
-  return(as.character(cleaned[1]))
-}
-
-
 # Token verification function
 # This checks if the unique words in the input are present in the match.
 #' @export
