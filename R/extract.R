@@ -39,10 +39,10 @@ extract <- function(data,
     message("Cleaning corporate aliases and removing suffixes...")
   }
   # Pattern Preparation
-  raw_aliases <- unlist(pbapply::pblapply(regex_lookup$aliases, clean_org_alias))
-  regex_lookup$pattern <- pbapply::pbsapply(strsplit(raw_aliases, "\\|"), function(parts) {
-    cleaned_parts <- trimws(parts)
-    paste(unique(cleaned_parts), collapse = "|")
+  regex_lookup$pattern <- pbapply::pbsapply(regex_lookup$aliases, function(x) {
+    raw <- clean_org_alias(x)
+    parts <- unlist(strsplit(raw, "\\|"))
+    paste(unique(trimws(parts)), collapse = "|")
   }, cl = cl)
 
   regex_lookup <- regex_lookup[nchar(regex_lookup$pattern) > 1, ]
@@ -93,6 +93,7 @@ extract <- function(data,
 
   return(result[order(-result$similarity), ])
 }
+
 
 # Token verification function
 # This checks if the unique words in the input are present in the match.
