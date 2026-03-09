@@ -7,6 +7,7 @@
 extract(
   data,
   col_name = "text",
+  mode = c("match", "search"),
   data_return_cols = NULL,
   regex_return_cols = NULL,
   remove_acronyms = FALSE,
@@ -20,6 +21,8 @@ extract(
 \item{data}{A data frame or character vector containing the text to search.}
 
 \item{col_name}{Column name in the data frame containing text to search through. Default is "text".}
+
+\item{mode}{String; "match" (direct comparison) or "search" (extract from long text).}
 
 \item{data_return_cols}{Optional vector of column names to include from the input 'data'.}
 

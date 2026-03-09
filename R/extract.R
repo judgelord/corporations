@@ -4,6 +4,7 @@
 #'
 #' @param data A data frame or character vector containing the text to search.
 #' @param col_name Column name in the data frame containing text to search through. Default is "text".
+#' @param mode String; "match" (direct comparison) or "search" (extract from long text).
 #' @param data_return_cols Optional vector of column names to include from the input 'data'.
 #' @param regex_return_cols Optional vector of column names to include from the built-in corporations data (e.g., "FED_RSSD", "CIK").
 #' @param remove_acronyms Logical; if TRUE, removes all-uppercase patterns from the search.
@@ -19,8 +20,10 @@
 #' @importFrom dplyr sample_frac
 #' @importFrom pbapply pbsapply
 #' @importFrom stringdist stringsim
+#' @importFrom udpipe udpipe_download_model udpipe_load_model udpipe_annotate
 extract <- function(data,
                     col_name = "text",
+                    mode = c("match", "search"),
                     data_return_cols = NULL,
                     regex_return_cols = NULL,
                     remove_acronyms = FALSE,
@@ -28,6 +31,66 @@ extract <- function(data,
                     verbose = TRUE,
                     unique_match = FALSE,
                     cl = NULL) {
+  # Search mode logic
+  mode <- match.arg(mode)
+  if (mode == "search") {
+    if (verbose) message("Extracting entities from input data in search mode...")
+
+    if (is.character(data)) data <- tibble::tibble(!!col_name := data)
+
+    # Define a permanent directory on the user's machine for this package
+    model_dir <- tools::R_user_dir("YourPackageName", which = "data")
+    if (!dir.exists(model_dir)) dir.create(model_dir, recursive = TRUE)
+
+    model_path <- file.path(model_dir, "english-ewt.udpipe")
+
+    if (!file.exists(model_path)) {
+      # Ask the user for permission
+      message("This package requires a one-time download of a 20MB NLP model to your machine.")
+      ans <- askYesNo("Would you like to download the model now?")
+
+      # 2. Check the answer
+      if (isTRUE(ans)) {
+        if (verbose) message("Downloading NLP model for one-time setup...")
+        m_info <- udpipe::udpipe_download_model(language = "english", model_dir = model_dir)
+        file.rename(m_info$file_model, model_path)
+      } else {
+        # 3. If they say no, the function cannot run in search mode
+        stop("Search mode requires the NLP model. Download cancelled by user.")
+      }
+    }
+
+    ud_model <- udpipe::udpipe_load_model(model_path)
+
+    anno <- as.data.frame(udpipe::udpipe_annotate(ud_model, x = data[[col_name]]))
+
+    # Filter for Proper Nouns
+    entities <- anno[anno$upos == "PROPN", ]
+    if (nrow(entities) == 0) return(tibble::tibble())
+
+    # Ensure token_id is numeric to prevent math errors
+    token_ids <- as.numeric(entities$token_id)
+
+    # Group sequential Proper Nouns (e.g., "Goldman" + "Sachs")
+    # Check if the difference between current and previous ID is exactly 1
+    if (length(token_ids) > 1) {
+      entities$diff <- c(1, diff(token_ids))
+      # If the diff is not 1, it's a new group (a different entity in the same text)
+      entities$group <- cumsum(entities$diff != 1)
+    } else {
+      entities$group <- 0
+    }
+
+    # Update 'data' dataframe from extracted entities
+    entities_agg <- aggregate(token ~ doc_id + group, data = entities, paste, collapse = " ")
+
+    # Convert doc_id (e.g., "doc1") to row index (1)
+    row_indices <- as.integer(gsub("doc", "", entities_agg$doc_id))
+
+    # Reconstruct 'data' to keep original columns/metadata
+    data <- data[row_indices, , drop = FALSE]
+    data[[col_name]] <- entities_agg$token
+  }
 
   # Setup Data
   regex_lookup <- corporations_data
@@ -50,12 +113,13 @@ extract <- function(data,
   regex_lookup$pattern <- paste0("\\b(?:", regex_lookup$pattern, ")\\b")
 
   # Extraction via regextable package
+  final_return_cols <- unique(c(col_name, data_return_cols))
   result <- regextable::extract(
     data = data,
     regex_table = regex_lookup,
     col_name = col_name,
     pattern_col = "pattern",
-    data_return_cols = data_return_cols,
+    data_return_cols = final_return_cols,
     regex_return_cols = regex_return_cols,
     remove_acronyms = remove_acronyms,
     do_clean_text = do_clean_text,
@@ -64,7 +128,22 @@ extract <- function(data,
     cl = cl
   )
 
-  if (nrow(result) == 0) return(result)
+  if (is.null(result) || nrow(result) == 0) {
+    return(tibble::tibble())
+  }
+
+  if (!col_name %in% names(result)) {
+    if (verbose) message("Warning: col_name not found in results. Returning raw matches.")
+    return(result)
+  }
+
+  # Only continue running if the column has data
+  valid_rows <- which(!is.na(result[[col_name]]) & result[[col_name]] != "")
+  if (length(valid_rows) == 0) {
+    return(tibble::tibble())
+  }
+
+  result <- result[valid_rows, ]
 
   if (verbose) message("Verifying matches via token consistency...")
 
@@ -97,7 +176,7 @@ extract <- function(data,
 
 # Token verification function
 # This checks if the unique words in the input are present in the match.
-#' @export
+#' @noRd
 verify_tokens <- function(input_str, match_str) {
   in_tokens <- unlist(strsplit(tolower(input_str), "\\s+"))
   ma_tokens <- unlist(strsplit(tolower(match_str), "\\s+"))

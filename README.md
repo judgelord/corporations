@@ -21,7 +21,8 @@ the S&P Global Market Intelligence), and FDIC-insured companies. The
 
 For each matching substring, `corprations::extract` returns
 
-- the row number of `data`  
+- the row number of `data`
+- the `text` column from `data`
 - the `pattern`
 - the matched substring
 - the `confidence_score` based on Jaro-Winkler similarity matching to
@@ -90,6 +91,17 @@ print(cleaned_text)
 #> [1] "hello world"
 ```
 
+## The function supports two distinct modes of operation:
+
+1.  `match` (Default): Direct comparison. Best for short strings or
+    lists of entities where you expect the text to be a company name.
+
+2.  `search`: Deep extraction. Uses an NLP model (UDpipe) to identify
+    Proper Nouns within longer unstructured text (sentences) before
+    running the regex match. NOTE: When using mode = “search”, the
+    package will prompt you to download a ~15MB NLP model on its first
+    run. This model allows the package to “read” the sentence structure.
+
 ## Extract regex-based matches from text
 
 ### Description
@@ -110,6 +122,8 @@ match the same text, multiple rows are returned, one per match.
 
 - **`col_name`**: (default `"text"`) Column name in the data frame
   containing text to search through.
+- **`mode`**: (default `match`) Use `match` for direct matching or
+  `search` for matching after extraction from longer text.
 - **`data_return_cols`**: (default `NULL`) Vector of additional columns
   from `data` to include in the output.
 - **`regex_return_cols`**: (default `NULL`) Vector of additional columns
@@ -128,11 +142,19 @@ match the same text, multiple rows are returned, one per match.
 - **`cl`**: (default `NULL`) A cluster object or integer specifying
   child processes for parallel evaluation (ignored on Windows).
 
+## Filtering and Verification
+
+Matches are automatically filtered using a token verification check. The
+function identifies “significant” words (ignoring suffixes like “Inc” or
+“Corp”) and requires at least a 60% overlap between the input text and
+the corporations data entry to be considered a valid match.
+
 ### Returns
 
 A data frame with one row per match, including:
 
 - `row_id`: the internal row number of the text in the input data
+- the `col_name` (default “text”) column from `data`
 - Optional columns from the input data (if data_return_cols specified)
 - Optional columns from `corporations_data` (if regex_return_cols
   specified)
@@ -150,7 +172,7 @@ users to directly link company names with unique identifiers, determine
 which are publicly traded companies, and more.
 
 ``` r
-#Extract patterns using only required arguments
+# Extract patterns using only required arguments and the default mode = "match"
 result <- extract(
   data = project_2025_coalition_and_contributors,
   col_name = "organization",

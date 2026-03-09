@@ -19,7 +19,8 @@ Imports:
     pbapply,
     regextable,
     stringdist,
-    stringr
+    stringr,
+    udpipe
 Remotes: 
     judgelord/regextable
 URL: https://github.com/judgelord/corporations
