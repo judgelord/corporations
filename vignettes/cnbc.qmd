@@ -46,22 +46,28 @@ links <- html_nodes(html, "a") # "a" nodes are linked text
 
 cnbc <- html_text(links)
 
-cnbc[138:150]
+cnbc <- cnbc[160:190]
+cnbc
 ```
 
 ```{r}
-# Load the data as a tibble (dataframe)
+# Load the data as a tibble (dataframe) and remove empty strings
 cnbc_df <- data.frame(headline = cnbc, stringsAsFactors = FALSE)
+cnbc_df <- cnbc_df[trimws(cnbc_df$headline) != "", , drop = FALSE]
 
 # Run the extract function
 # Note: we tell the function to look in the "headline" column
 results <- extract(
   data = cnbc_df,
   col_name = "headline",
+  mode = "search",
+  regex_return_cols = c("aliases", "cik"),
   verbose = TRUE
  )
 
 head(results)
 ```
+
+
 
 

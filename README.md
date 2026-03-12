@@ -173,7 +173,7 @@ which are publicly traded companies, and more.
 
 ``` r
 # Extract patterns using only required arguments and the default mode = "match"
-result <- extract(
+result <- corporations::extract(
   data = project_2025_coalition_and_contributors,
   col_name = "organization",
   data_return_cols = c("organization"),
