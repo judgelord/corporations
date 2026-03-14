@@ -112,6 +112,28 @@ extract <- function(data,
   # Word boundaries to ensure substrings do not match
   regex_lookup$pattern <- paste0("\\b(?:", regex_lookup$pattern, ")\\b")
 
+  # Convert to tibble if is a character vector
+  if (is.character(data)) {
+    data <- tibble::tibble(!!col_name := data)
+  }
+
+  if (is.data.frame(data)) {
+    original_nrow <- nrow(data)
+
+    # Keep rows where col_name is not NA and is not an empty string
+    data <- data[!is.na(data[[col_name]]) & trimws(as.character(data[[col_name]])) != "", , drop = FALSE]
+
+    if (verbose && (nrow(data) < original_nrow)) {
+      message(sprintf("Removed %d rows containing NA or empty strings in '%s'.",
+                      original_nrow - nrow(data), col_name))
+    }
+  }
+
+  if (nrow(data) == 0) {
+    if (verbose) message("No valid data remaining after cleaning.")
+    return(tibble::tibble())
+  }
+
   # Extraction via regextable package
   final_return_cols <- unique(c(col_name, data_return_cols))
   result <- regextable::extract(
@@ -161,7 +183,10 @@ extract <- function(data,
   )
 
   # Only keep the match if at least 60% of the input tokens match.
-  result <- result[result$token_score >= 0.6, ]
+  # result <- result[result$token_score >= 0.6, ]
+
+  # Only keep the match is the match is exactly the same as the cleaned name
+  result <- result[result$match_clean == result$input_clean, ]
 
   # Order results based on substring similarity
   result$match_clean <- NULL

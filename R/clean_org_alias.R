@@ -6,7 +6,8 @@
 clean_org_alias <- function(x) {
   x <- tolower(x)
   suffixes <- c("\\binc\\b", "\\bcorp\\b", "\\bcorporation\\b",
-                "\\bllc\\b", "\\blp\\b", "\\bltd\\b", "\\bincorporated\\b")
+                "\\bllc\\b", "\\blp\\b", "\\bltd\\b", "\\bincorporated\\b",
+                "\\bllp\\b")
 
   suffix_pattern <- paste0("(?:", paste(suffixes, collapse = "|"), ")")
 
