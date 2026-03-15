@@ -2,7 +2,7 @@
 
 export(clean_org_alias)
 export(extract)
-export(filter_corporations)
+export(filter)
 importFrom(dplyr,mutate)
 importFrom(dplyr,sample_frac)
 importFrom(pbapply,pbsapply)

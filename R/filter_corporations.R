@@ -10,14 +10,13 @@
 #'
 #' @return A tibble containing the filtered subset of the corporations database, including columns such as `aliases`, `ticker`, `cik`, and `naics`.
 #' @export
-filter_corporations <- function(naics_codes = NULL,
-                                public_only = FALSE,
-                                corporations_return_cols = c("aliases", "cik", "FED_RSSD"),
-                                search_term = NULL
-                                ) {
+filter <- function(naics_codes = NULL,
+                  public_only = FALSE,
+                  search_term = NULL,
+                  corporations_return_cols = c("aliases", "cik", "FED_RSSD")
+                  ) {
 
-  # using sample data
-  corporations_filter <- corporations_data_sample
+  corporations_filter <- corporations_data
 
   # Filter by NAICS (Optional)
   if (!is.null(naics_codes)) {

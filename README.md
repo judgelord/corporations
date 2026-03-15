@@ -73,6 +73,47 @@ head(corporations_data_sample)
 #> 6  20       NA   KTII    NA cik,sec
 ```
 
+## Filtering Corporations
+
+Before running a large extraction job, you may want to explore the
+corporations crosswalk or limit your search to specific types of
+entities (e.g., only publicly traded companies or specific industries).
+The `filter()` function allows you to subset the internal crosswalk to
+specific companies.
+
+### Parameters
+
+- **`naics_codes`**: (default `NULL`) Vector of NAICS codes to filter
+  the dictionary. If NULL, all industries are included.
+- **`public_only`**: (default `False`) if TRUE, subsets the dictionary
+  to only include corporations with stock tickers.
+- **`search_term`**: (default `NULL`) Character string; if provided,
+  filters the company names using a partial string match
+  (case-insensitive).
+- **`corporations_return_cols`**: (default
+  `c("aliases", "cik", "FED_RSSD")`) Vector of column names to include
+  from the built-in corporations data (e.g., “FED_RSSD”, “CIK”).
+
+``` r
+# Find public companies in the custom computer programming services sector (NAICS 541511) with stock tickers. 
+programming_services_public <- filter(naics_codes = c(541511), public_only = TRUE)
+head(programming_services_public)
+#>                                                                                    aliases     cik FED_RSSD ticker
+#> 161                                ANALYSTS INTERNATIONAL CORP|Analysts International Corp    6292       NA   ANLY
+#> 2638                                                                       TSR INC|TSR Inc   98338       NA   TSRI
+#> 658841                                          GLIMPSE GROUP, INC.|GLIMPSE GROUP INC(THE) 1854445       NA   VRAR
+#> 669824                                                                            CI&T INC 1868995       NA   CINT
+#> 744508 EVOLVING SYSTEMS INC|SYMBOLIC LOGIC, INC.|EVOLVING SYSTEMS INC|Evolving Systems Inc 1052054       NA   EVOL
+#> 745780                                    INFOSYS LTD|INFOSYS TECHNOLOGIES LTD|INFOSYS LTD 1067491       NA   INFY
+#>         naics           sources
+#> 161    541511 cik,compustat,sec
+#> 2638   541511 cik,compustat,sec
+#> 658841 541511     cik,compustat
+#> 669824 541511     cik,compustat
+#> 744508 541511 cik,compustat,sec
+#> 745780 541511     cik,compustat
+```
+
 ## Text cleaning
 
 Before matching, by default, `clean_text()` from the
@@ -107,7 +148,7 @@ print(cleaned_text)
 ### Description
 
 `extract()` performs regex-based matching on a text column using the
-corporations lookup table. All patterns that match each row are first
+corporations look-up table. All patterns that match each row are first
 filtered based on a token similarity scoring system. Then the matches
 that are confident are returned along with the corresponding pattern and
 optional metadata from the corporations table. If multiple patterns
@@ -184,10 +225,10 @@ head(result)
 #> # A tibble: 6 × 10
 #>   row_id organization                        cik FED_RSSD ticker  naics sources           pattern       match similarity
 #>    <int> <chr>                             <dbl>    <dbl> <chr>   <dbl> <chr>             <chr>         <chr>      <dbl>
-#> 1     47 Patrick Henry College           1205813       NA ""         NA cik               "\\b(?:patri… Patr…      1    
-#> 2     71 Korn Ferry                        56679       NA "KFY"  561311 cik,compustat,sec "\\b(?:korn … Korn…      1    
-#> 3     76 Booz Allen Hamilton               13222       NA ""         NA cik               "\\b(?:booz … Booz…      1    
-#> 4     78 River Financial Inc.            1641601       NA ""         NA cik               "\\b(?:river… Rive…      1    
-#> 5     78 River Financial Inc.            1846407       NA ""         NA cik               "\\b(?:river… Rive…      1    
-#> 6     73 Taft Stettinius & Hollister LLP  909789       NA ""         NA cik               "\\b(?:taft … Taft…      0.957
+#> 1     47 Patrick Henry College           1205813       NA ""         NA cik               "\\b(?:patri… Patr…          1
+#> 2     71 Korn Ferry                        56679       NA "KFY"  561311 cik,compustat,sec "\\b(?:korn … Korn…          1
+#> 3     73 Taft Stettinius & Hollister LLP  909789       NA ""         NA cik               "\\b(?:taft … Taft…          1
+#> 4     76 Booz Allen Hamilton               13222       NA ""         NA cik               "\\b(?:booz … Booz…          1
+#> 5     78 River Financial Inc.            1641601       NA ""         NA cik               "\\b(?:river… Rive…          1
+#> 6     78 River Financial Inc.            1846407       NA ""         NA cik               "\\b(?:river… Rive…          1
 ```

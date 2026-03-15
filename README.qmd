@@ -64,6 +64,22 @@ data("corporations_data_sample")
 head(corporations_data_sample)
 ```
 
+## Filtering Corporations
+
+Before running a large extraction job, you may want to explore the corporations crosswalk or limit your search to specific types of entities (e.g., only publicly traded companies or specific industries). The `filter()` function allows you to subset the internal crosswalk to specific companies. 
+
+### Parameters
+
+-   **`naics_codes`**: (default `NULL`) Vector of NAICS codes to filter the dictionary. If NULL, all industries are included.
+-   **`public_only`**: (default `False`) if TRUE, subsets the dictionary to only include corporations with stock tickers.
+-   **`search_term`**: (default `NULL`) Character string; if provided, filters the company names using a partial string match (case-insensitive).
+-   **`corporations_return_cols`**: (default `c("aliases", "cik", "FED_RSSD")`) Vector of column names to include from the built-in corporations data (e.g., "FED_RSSD", "CIK").
+```{r}
+# Find public companies in the custom computer programming services sector (NAICS 541511) with stock tickers. 
+programming_services_public <- filter(naics_codes = c(541511), public_only = TRUE)
+head(programming_services_public)
+```
+
 ## Text cleaning
 
 Before matching, by default, `clean_text()` from the [regextable](https://github.com/judgelord/regextable) is applied to standardize text for better matching in messy text. It converts text to lowercase, removes excess punctuation, replaces line breaks and dashes with spaces, and collapses multiple spaces into a single space. Text cleaning is applied only during matching and does not modify the original input data. Users can disable this behavior by setting `do_clean_text = FALSE`.
@@ -85,7 +101,7 @@ NOTE: When using mode = "search", the package will prompt you to download a ~15M
 
 ### Description
 
-`extract()` performs regex-based matching on a text column using the corporations lookup table. All patterns that match each row are first filtered based on a token similarity scoring system. Then the matches that are confident are returned along with the corresponding pattern and optional metadata from the corporations table. If multiple patterns match the same text, multiple rows are returned, one per match.
+`extract()` performs regex-based matching on a text column using the corporations look-up table. All patterns that match each row are first filtered based on a token similarity scoring system. Then the matches that are confident are returned along with the corresponding pattern and optional metadata from the corporations table. If multiple patterns match the same text, multiple rows are returned, one per match.
 
 ### Required Parameters
 
