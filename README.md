@@ -2,7 +2,7 @@
 
 <!--DO NOT EDIT .md file, only README.qmd-->
 
-# corporations
+# corporations <img src="man/figures/corporations_logo.png" align="right" width="125"/>
 
 ## Description
 
