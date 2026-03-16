@@ -1,4 +1,4 @@
-#' @title Review Name Matches
+#' @title Report corporations matches
 #' @description Flag incorrect name matches or suggest missing aliases.
 #' @param results The dataframe returned from the extract() function.
 #' @param corporations_data The built-in data for reference (optional here).
