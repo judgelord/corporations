@@ -65,7 +65,7 @@ results <- extract(
   verbose = TRUE
  )
 
-head(results)
+results %>% head() %>% print(width = Inf)
 ```
 
 

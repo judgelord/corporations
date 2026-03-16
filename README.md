@@ -25,9 +25,8 @@ For each matching substring, `corprations::extract` returns
 - the `text` column from `data`
 - the `pattern`
 - the matched substring
-- the `confidence_score` based on Jaro-Winkler similarity matching to
-  for result ordering purposes
 - Optionally, other columns in `input_data` or the `corporations_data`
+  or similarity scores if `token` method is chosen
 
 ## Installation
 
@@ -132,7 +131,15 @@ print(cleaned_text)
 #> [1] "hello world"
 ```
 
-## The function supports two distinct modes of operation:
+## The function supports two methods of matching:
+
+1.  `exact` (Default): One to one matching of corporation name strings
+    between the input user data.
+
+2.  `token`: Token based matching wiht token scoring function that
+    compares words of the string names.
+
+## The function supports two modes of operation:
 
 1.  `match` (Default): Direct comparison. Best for short strings or
     lists of entities where you expect the text to be a company name.
@@ -163,6 +170,9 @@ match the same text, multiple rows are returned, one per match.
 
 - **`col_name`**: (default `"text"`) Column name in the data frame
   containing text to search through.
+- **`method`**: (default `exact`) Use “exact” for one to one match of
+  name strings or “token” for matching based on a token scoring
+  function.
 - **`mode`**: (default `match`) Use `match` for direct matching or
   `search` for matching after extraction from longer text.
 - **`data_return_cols`**: (default `NULL`) Vector of additional columns
@@ -201,8 +211,9 @@ A data frame with one row per match, including:
   specified)
 - `pattern`: the regex pattern matched
 - `match`: the substring matched in the text
-- `simililarity`: this is the similarity matching score based on
-  Jaro-Winkler Similarity of the filtered results for ordering purposes
+- `simililarity`: this is the similarity matching score if `token`
+  method is selected based on Jaro-Winkler Similarity of the filtered
+  results for ordering purposes
 
 ### Basic Usage
 
@@ -218,17 +229,17 @@ result <- corporations::extract(
   data = project_2025_coalition_and_contributors,
   col_name = "organization",
   data_return_cols = c("organization"),
-  regex_return_cols = c("cik", "FED_RSSD", "ticker", "naics", "sources")
+  regex_return_cols = c("cik", "ticker", "naics")
 )
 
 head(result)
-#> # A tibble: 6 × 10
-#>   row_id organization                        cik FED_RSSD ticker  naics sources           pattern       match similarity
-#>    <int> <chr>                             <dbl>    <dbl> <chr>   <dbl> <chr>             <chr>         <chr>      <dbl>
-#> 1     47 Patrick Henry College           1205813       NA ""         NA cik               "\\b(?:patri… Patr…          1
-#> 2     71 Korn Ferry                        56679       NA "KFY"  561311 cik,compustat,sec "\\b(?:korn … Korn…          1
-#> 3     73 Taft Stettinius & Hollister LLP  909789       NA ""         NA cik               "\\b(?:taft … Taft…          1
-#> 4     76 Booz Allen Hamilton               13222       NA ""         NA cik               "\\b(?:booz … Booz…          1
-#> 5     78 River Financial Inc.            1641601       NA ""         NA cik               "\\b(?:river… Rive…          1
-#> 6     78 River Financial Inc.            1846407       NA ""         NA cik               "\\b(?:river… Rive…          1
+#> # A tibble: 6 × 7
+#>   row_id organization                        cik ticker  naics pattern                                             match
+#>    <int> <chr>                             <dbl> <chr>   <dbl> <chr>                                               <chr>
+#> 1     47 Patrick Henry College           1205813 ""         NA "\\b(?:patrick henry college)\\b"                   Patr…
+#> 2     71 Korn Ferry                        56679 "KFY"  561311 "\\b(?:korn ferry international|korn ferry)\\b"     Korn…
+#> 3     73 Taft Stettinius & Hollister LLP  909789 ""         NA "\\b(?:taft stettinius & hollister)\\b"             Taft…
+#> 4     76 Booz Allen Hamilton               13222 ""         NA "\\b(?:booz allen & hamilton|booz allen hamilton)\… Booz…
+#> 5     78 River Financial Inc.            1641601 ""         NA "\\b(?:river financial)\\b"                         Rive…
+#> 6     78 River Financial Inc.            1846407 ""         NA "\\b(?:river financial)\\b"                         Rive…
 ```

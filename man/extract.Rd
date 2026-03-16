@@ -7,6 +7,7 @@
 extract(
   data,
   col_name = "text",
+  method = c("exact", "token"),
   mode = c("match", "search"),
   data_return_cols = NULL,
   regex_return_cols = NULL,
@@ -21,6 +22,8 @@ extract(
 \item{data}{A data frame or character vector containing the text to search.}
 
 \item{col_name}{Column name in the data frame containing text to search through. Default is "text".}
+
+\item{method}{String; "exact" (one to one match of name strings) or "token" (matching based on a token score).}
 
 \item{mode}{String; "match" (direct comparison) or "search" (extract from long text).}
 

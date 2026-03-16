@@ -4,6 +4,7 @@
 #'
 #' @param data A data frame or character vector containing the text to search.
 #' @param col_name Column name in the data frame containing text to search through. Default is "text".
+#' @param method String; "exact" (one to one match of name strings) or "token" (matching based on a token score).
 #' @param mode String; "match" (direct comparison) or "search" (extract from long text).
 #' @param data_return_cols Optional vector of column names to include from the input 'data'.
 #' @param regex_return_cols Optional vector of column names to include from the built-in corporations data (e.g., "FED_RSSD", "CIK").
@@ -23,6 +24,7 @@
 #' @importFrom udpipe udpipe_download_model udpipe_load_model udpipe_annotate
 extract <- function(data,
                     col_name = "text",
+                    method = c("exact", "token"),
                     mode = c("match", "search"),
                     data_return_cols = NULL,
                     regex_return_cols = NULL,
@@ -33,6 +35,8 @@ extract <- function(data,
                     cl = NULL) {
   # Search mode logic
   mode <- match.arg(mode)
+  method <- match.arg(method)
+
   if (mode == "search") {
     if (verbose) message("Extracting entities from input data in search mode...")
 
@@ -173,31 +177,33 @@ extract <- function(data,
   result$match_clean <- clean_org_alias(result$match)
   result$input_clean <- clean_org_alias(result[[col_name]])
 
-  # Apply the Token Check and Jaro-Winkler Similarity
-  result$token_score <- mapply(verify_tokens, result$input_clean, result$match_clean)
+  if (method == "token") {
+    # Apply the Token Check and Jaro-Winkler Similarity
+    result$token_score <- mapply(verify_tokens, result$input_clean, result$match_clean)
 
-  result$similarity <- stringdist::stringsim(
-    result$input_clean,
-    result$match_clean,
-    method = "jw"
-  )
+    result$similarity <- stringdist::stringsim(
+      result$input_clean,
+      result$match_clean,
+      method = "jw"
+    )
 
-  # Only keep the match if at least 60% of the input tokens match.
-  # result <- result[result$token_score >= 0.6, ]
+    # Only keep the match if at least 60% of the input tokens match.
+    result <- result[result$token_score >= 0.6, ]
+    result$token_score <- NULL
 
-  # Only keep the match is the match is exactly the same as the cleaned name
-  result <- result[result$match_clean == result$input_clean, ]
+    # Order results based on substring similarity
+    results <- result[order(-result$similarity), ]
+  }
+  else {
+    # Only keep the match is the match is exactly the same as the cleaned name
+    result <- result[result$match_clean == result$input_clean, ]
+  }
 
-  # Order results based on substring similarity
   result$match_clean <- NULL
   result$input_clean <- NULL
-  result$token_score <- NULL
-
   if (verbose) message("Finished Matching!")
-
-  return(result[order(-result$similarity), ])
+  return(result)
 }
-
 
 # Token verification function
 # This checks if the unique words in the input are present in the match.

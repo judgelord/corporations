@@ -40,8 +40,7 @@ For each matching substring, `corprations::extract` returns
 - the `text` column from `data`
 - the `pattern` 
 - the matched substring
-- the `confidence_score` based on Jaro-Winkler similarity matching to for result ordering purposes
-- Optionally, other columns in `input_data` or the `corporations_data`
+- Optionally, other columns in `input_data` or the `corporations_data` or similarity scores if `token` method is chosen
 
 ## Installation
 
@@ -90,8 +89,13 @@ text <- "  HELLO---WORLD  "
 cleaned_text <- regextable::clean_text(text)
 print(cleaned_text)
 ```
+## The function supports two methods of matching: 
 
-## The function supports two distinct modes of operation:
+1. `exact` (Default): One to one matching of corporation name strings between the input user data. 
+
+2. `token`: Token based matching wiht token scoring function that compares words of the string names.
+
+## The function supports two modes of operation:
 
 1. `match` (Default): Direct comparison. Best for short strings or lists of entities where you expect the text to be a company name.
 
@@ -111,6 +115,7 @@ NOTE: When using mode = "search", the package will prompt you to download a ~15M
 ### Optional Parameters
 
 -   **`col_name`**: (default `"text"`) Column name in the data frame containing text to search through.
+-   **`method`**: (default `exact`) Use "exact" for one to one match of name strings or "token" for matching based on a token scoring function.
 -   **`mode`**: (default `match`) Use `match` for direct matching or `search` for matching after extraction from longer text.
 -   **`data_return_cols`**: (default `NULL`) Vector of additional columns from `data` to include in the output.
 -   **`regex_return_cols`**: (default `NULL`) Vector of additional columns from `corporations_data` to include in the output (e.g., "FED_RSSD", "CIK").
@@ -135,7 +140,7 @@ A data frame with one row per match, including:
 - Optional columns from `corporations_data` (if regex_return_cols specified)
 - `pattern`: the regex pattern matched
 - `match`: the substring matched in the text
-- `simililarity`: this is the similarity matching score based on Jaro-Winkler Similarity of the filtered results for ordering purposes
+- `simililarity`: this is the similarity matching score if `token` method is selected based on Jaro-Winkler Similarity of the filtered results for ordering purposes
 
 ### Basic Usage
 
@@ -147,7 +152,7 @@ result <- corporations::extract(
   data = project_2025_coalition_and_contributors,
   col_name = "organization",
   data_return_cols = c("organization"),
-  regex_return_cols = c("cik", "FED_RSSD", "ticker", "naics", "sources")
+  regex_return_cols = c("cik", "ticker", "naics")
 )
 
 head(result)
