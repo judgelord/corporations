@@ -3,6 +3,7 @@
 export(clean_org_alias)
 export(extract)
 export(filter)
+export(report_fix)
 importFrom(dplyr,mutate)
 importFrom(dplyr,sample_frac)
 importFrom(pbapply,pbsapply)
