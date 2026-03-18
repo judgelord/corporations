@@ -25,6 +25,7 @@ jobs:
         with:
           extra-packages: any::pkgdown, any::quarto
           needs: website
+          install-recommends: false
 
       - name: Build site
         run: pkgdown::build_site_github_pages(install = FALSE)

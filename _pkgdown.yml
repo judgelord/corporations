@@ -1,4 +1,4 @@
 url: https://judgelord.github.io/corporations/
-  template:
+template:
   bootstrap: 5
-bootswatch: flatly
+  bootswatch: flatly
