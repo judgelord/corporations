@@ -8,7 +8,6 @@
 *.csv
 *.rda
 
-
 # User-specific files
 .Ruserdata
 .DS_Store

@@ -2,7 +2,7 @@
 % Please edit documentation in R/report_fix.R
 \name{report_fix}
 \alias{report_fix}
-\title{Review Name Matches}
+\title{Report corporations matches}
 \usage{
 report_fix(results, corporations_data = NULL)
 }

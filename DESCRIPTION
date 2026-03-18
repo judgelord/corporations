@@ -23,7 +23,7 @@ Imports:
     udpipe
 Remotes: 
     judgelord/regextable
-URL: https://github.com/judgelord/corporations, https://judgelord.github.io/corporations/
+URL: https://github.com/judgelord/corporations
 BugReports: https://github.com/judgelord/corporations/issues
 RoxygenNote: 7.3.3
 Depends: 
