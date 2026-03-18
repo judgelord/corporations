@@ -1,57 +1,49 @@
-# History files
-.Rhistory
-.Rapp.history
+on:
+  push:
+    branches: [main, master]
+  release:
+    types: [published]
+  workflow_dispatch:
 
-# Session Data files
-*.RData
-*.RDataTmp
-*.csv
-*.rda
+name: pkgdown
 
+permissions:
+  contents: write
 
-# User-specific files
-.Ruserdata
-.DS_Store
+jobs:
+  pkgdown:
+    runs-on: ubuntu-latest
+    if: github.repository == 'judgelord/corporations'
 
-# Example code in package build process
-*-Ex.R
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
-# Output files from R CMD build
-/*.tar.gz
+    steps:
+      - uses: actions/checkout@v4
 
-# Output files from R CMD check
-/*.Rcheck/
+      - uses: r-lib/actions/setup-pandoc@v2
 
-# RStudio files
-.Rproj.user/
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
 
-# produced vignettes
-vignettes/*.html
-vignettes/*.pdf
-vignettes/*_files/
+      - uses: quarto-dev/quarto-actions/setup@v2
 
-# OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
-.httr-oauth
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: .
+          extra-packages: |
+            any::pkgdown
+            any::quarto
+          needs: website
 
-# knitr and R markdown default cache directories
-*_cache/
-/cache/
+      - name: Build site
+        run: pkgdown::build_site_github_pages()
+        shell: Rscript {0}
 
-# Temporary files created by R markdown
-*.utf8.md
-*.knit.md
-
-# R Environment Variables
-.Renviron
-
-# pkgdown site
-docs/
-
-# translation temp files
-po/*~
-
-# RStudio Connect folder
-rsconnect/
-
-# NLP Models (Downloaded on-demand, not stored in repo)
-*.udpipe
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          clean: true
+          branch: gh-pages
+          folder: docs

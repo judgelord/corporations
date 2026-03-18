@@ -31,13 +31,14 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
+          packages: .
           extra-packages: |
             any::pkgdown
             any::quarto
           needs: website
 
       - name: Build site
-        run: pkgdown::build_site_github_pages(install = FALSE)
+        run: pkgdown::build_site_github_pages()
         shell: Rscript {0}
 
       - name: Deploy to GitHub Pages
