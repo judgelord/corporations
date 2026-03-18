@@ -7,10 +7,16 @@ on:
 
 name: pkgdown
 
+permissions:
+  contents: write
+
 jobs:
   pkgdown:
     runs-on: ubuntu-latest
     if: github.repository == 'judgelord/corporations'
+
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
@@ -21,18 +27,14 @@ jobs:
         with:
           use-public-rspm: true
 
+      - uses: quarto-dev/quarto-actions/setup@v2
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pkgdown, any::quarto
+          extra-packages: |
+            any::pkgdown
+            any::quarto
           needs: website
-
-      - name: Install package
-        run: R CMD INSTALL .
-
-      - name: Restore R environment
-        run: Rscript -e 'renv::restore()'
-
-      - uses: quarto-dev/quarto-actions/setup@v2
 
       - name: Build site
         run: pkgdown::build_site_github_pages(install = FALSE)
@@ -42,5 +44,5 @@ jobs:
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           clean: true
-          branch: gh-pages  # creates a hidden branch for the HTML
+          branch: gh-pages
           folder: docs
