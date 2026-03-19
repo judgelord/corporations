@@ -54,3 +54,4 @@ rsconnect/
 
 # NLP Models (Downloaded on-demand, not stored in repo)
 *.udpipe
+docs
