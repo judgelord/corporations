@@ -29,5 +29,12 @@ RoxygenNote: 7.3.3
 Depends: 
     R (>= 3.5)
 Suggests: 
+    knitr,
+    quarto,
+    rmarkdown,
+    devtools,
+    rvest,
+    pkgdown,
+    rvest,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
