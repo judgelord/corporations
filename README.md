@@ -136,7 +136,7 @@ print(cleaned_text)
 1.  `exact` (Default): One to one matching of corporation name strings
     between the input user data.
 
-2.  `token`: Token based matching wiht token scoring function that
+2.  `token`: Token based matching with token scoring function that
     compares words of the string names.
 
 ## The function supports two modes of operation:
