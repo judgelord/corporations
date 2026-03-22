@@ -1,0 +1,251 @@
+# corporations ![](reference/figures/corporations_logo.png)
+
+## Description
+
+The `corporations`
+[`extract()`](https://judgelord.github.io/corporations/reference/extract.md)
+function is a regular-expression-based pattern match tool to match
+vector of text with a built-in extensive crosswalk table of corporations
+using the [regextable](https://github.com/judgelord/regextable) package
+as a dependency. The crosswalk table includes companies with a central
+index key (a unique 10-digit, permanent identification number assigned
+by the U.S. Securities and Exchange Commission), Compustat (database
+managed by the S&P Global Market Intelligence), and FDIC-insured
+companies. The
+[`extract()`](https://judgelord.github.io/corporations/reference/extract.md)
+function requires one input
+
+1.  `input_data`: A vector of text to search (typically a data frame
+    with a `text` column)
+
+For each matching substring, `corprations::extract` returns
+
+- the row number of `data`
+- the `text` column from `data`
+- the `pattern`
+- the matched substring
+- Optionally, other columns in `input_data` or the `corporations_data`
+  or similarity scores if `token` method is chosen
+
+## Installation
+
+``` R
+devtools::install_github("judgelord/corporations")
+```
+
+``` r
+library(corporations)
+```
+
+## Data
+
+The examples below use an subset of the corporations_data crosswalk
+table of members of corporations and a example text data from the listed
+contributors in Project 2025’s “Mandate for Leadership: The Conservative
+Promise”.
+
+``` r
+data("project_2025_coalition_and_contributors")
+head(project_2025_coalition_and_contributors)
+#>           type                        organization individual                  role
+#> 1 Organization            Alabama Policy Institute            Advisory Board Member
+#> 2 Organization          Alliance Defending Freedom            Advisory Board Member
+#> 3 Organization  American Accountability Foundation            Advisory Board Member
+#> 4 Organization American Center for Law and Justice            Advisory Board Member
+#> 5 Organization                    American Compass            Advisory Board Member
+#> 6 Organization           The American Conservative            Advisory Board Member
+
+data("corporations_data_sample")
+head(corporations_data_sample)
+#>                                                      aliases                                                clean_alias
+#> 1   DEFINED ASSET FUNDS MUNICIPAL INVT TR FD NEW YORK SER 33   defined asset funds municipal invt tr fd new york ser 33
+#> 2      CORPORATE INCOME FUND SEVENTY NINTH SHORT TERM SERIES      corporate income fund seventy ninth short term series
+#> 3  DEFINED ASSET FUNDS MUNICIPAL INVT TR FD MON PYMT SER 155  defined asset funds municipal invt tr fd mon pymt ser 155
+#> 4  DEFINED ASSET FUNDS MUNICIPAL INVT TR FD MON PYMT SER 156  defined asset funds municipal invt tr fd mon pymt ser 156
+#> 5 NUVEEN TAX EXEMPT UNIT TRUST SERIES 169 NATIONAL TRUST 169 nuveen tax exempt unit trust series 169 national trust 169
+#> 6          K TRON INTERNATIONAL INC|K Tron International Inc                                       k tron international
+#>   cik FED_RSSD ticker naics sources
+#> 1   3       NA   <NA>    NA     cik
+#> 2  13       NA   <NA>    NA     cik
+#> 3  14       NA   <NA>    NA     cik
+#> 4  17       NA   <NA>    NA     cik
+#> 5  18       NA   <NA>    NA     cik
+#> 6  20       NA   KTII    NA cik,sec
+```
+
+## Filtering Corporations
+
+Before running a large extraction job, you may want to explore the
+corporations crosswalk or limit your search to specific types of
+entities (e.g., only publicly traded companies or specific industries).
+The
+[`filter()`](https://judgelord.github.io/corporations/reference/filter.md)
+function allows you to subset the internal crosswalk to specific
+companies.
+
+### Parameters
+
+- **`naics_codes`**: (default `NULL`) Vector of NAICS codes to filter
+  the dictionary. If NULL, all industries are included.
+- **`public_only`**: (default `False`) if TRUE, subsets the dictionary
+  to only include corporations with stock tickers.
+- **`search_term`**: (default `NULL`) Character string; if provided,
+  filters the company names using a partial string match
+  (case-insensitive).
+- **`corporations_return_cols`**: (default
+  `c("aliases", "cik", "FED_RSSD")`) Vector of column names to include
+  from the built-in corporations data (e.g., “FED_RSSD”, “CIK”).
+
+``` r
+# Find public companies in the custom computer programming services sector (NAICS 541511) with stock tickers. 
+programming_services_public <- filter(naics_codes = c(541511), public_only = TRUE)
+head(programming_services_public)
+#>                                                                                    aliases     cik FED_RSSD ticker
+#> 161                                ANALYSTS INTERNATIONAL CORP|Analysts International Corp    6292       NA   ANLY
+#> 2638                                                                       TSR INC|TSR Inc   98338       NA   TSRI
+#> 658841                                          GLIMPSE GROUP, INC.|GLIMPSE GROUP INC(THE) 1854445       NA   VRAR
+#> 669824                                                                            CI&T INC 1868995       NA   CINT
+#> 744508 EVOLVING SYSTEMS INC|SYMBOLIC LOGIC, INC.|EVOLVING SYSTEMS INC|Evolving Systems Inc 1052054       NA   EVOL
+#> 745780                                    INFOSYS LTD|INFOSYS TECHNOLOGIES LTD|INFOSYS LTD 1067491       NA   INFY
+#>         naics           sources
+#> 161    541511 cik,compustat,sec
+#> 2638   541511 cik,compustat,sec
+#> 658841 541511     cik,compustat
+#> 669824 541511     cik,compustat
+#> 744508 541511 cik,compustat,sec
+#> 745780 541511     cik,compustat
+```
+
+## Text cleaning
+
+Before matching, by default, `clean_text()` from the
+[regextable](https://github.com/judgelord/regextable) is applied to
+standardize text for better matching in messy text. It converts text to
+lowercase, removes excess punctuation, replaces line breaks and dashes
+with spaces, and collapses multiple spaces into a single space. Text
+cleaning is applied only during matching and does not modify the
+original input data. Users can disable this behavior by setting
+`do_clean_text = FALSE`.
+
+``` r
+text <- "  HELLO---WORLD  "
+cleaned_text <- regextable::clean_text(text)
+print(cleaned_text)
+#> [1] "hello world"
+```
+
+## The function supports two methods of matching:
+
+1.  `exact` (Default): One to one matching of corporation name strings
+    between the input user data.
+
+2.  `token`: Token based matching with token scoring function that
+    compares words of the string names.
+
+## The function supports two modes of operation:
+
+1.  `match` (Default): Direct comparison. Best for short strings or
+    lists of entities where you expect the text to be a company name.
+
+2.  `search`: Deep extraction. Uses an NLP model (UDpipe) to identify
+    Proper Nouns within longer unstructured text (sentences) before
+    running the regex match. NOTE: When using mode = “search”, the
+    package will prompt you to download a ~15MB NLP model on its first
+    run. This model allows the package to “read” the sentence structure.
+
+## Extract regex-based matches from text
+
+### Description
+
+[`extract()`](https://judgelord.github.io/corporations/reference/extract.md)
+performs regex-based matching on a text column using the corporations
+look-up table. All patterns that match each row are first filtered based
+on a token similarity scoring system. Then the matches that are
+confident are returned along with the corresponding pattern and optional
+metadata from the corporations table. If multiple patterns match the
+same text, multiple rows are returned, one per match.
+
+### Required Parameters
+
+- **`data`**: A data frame or character vector containing the text to
+  search.
+
+### Optional Parameters
+
+- **`col_name`**: (default `"text"`) Column name in the data frame
+  containing text to search through.
+- **`method`**: (default `exact`) Use “exact” for one to one match of
+  name strings or “token” for matching based on a token scoring
+  function.
+- **`mode`**: (default `match`) Use `match` for direct matching or
+  `search` for matching after extraction from longer text.
+- **`data_return_cols`**: (default `NULL`) Vector of additional columns
+  from `data` to include in the output.
+- **`regex_return_cols`**: (default `NULL`) Vector of additional columns
+  from `corporations_data` to include in the output (e.g., “FED_RSSD”,
+  “CIK”).
+- **do_fuzzy_matching**: (default `TRUE`) If TRUE, applies fuzzy
+  matching to the regular expression matches and includes another column
+  of confidence scores for the matches.
+- **`remove_acronyms`**: (default `FALSE`) If `TRUE`, removes
+  all-uppercase patterns from `regex_table`.
+- **`do_clean_text`**: (default `TRUE`) If `TRUE`, cleans text before
+  matching.
+- **`verbose`**: (default `TRUE`) If `TRUE`, displays progress messages.
+- **`unique_match`** (default `FALSE`) If `TRUE`, stops searching after
+  first match to find at most one match per row.
+- **`cl`**: (default `NULL`) A cluster object or integer specifying
+  child processes for parallel evaluation (ignored on Windows).
+
+## Filtering and Verification
+
+Matches are automatically filtered using a token verification check. The
+function identifies “significant” words (ignoring suffixes like “Inc” or
+“Corp”) and requires at least a 60% overlap between the input text and
+the corporations data entry to be considered a valid match.
+
+### Returns
+
+A data frame with one row per match, including:
+
+- `row_id`: the internal row number of the text in the input data
+- the `col_name` (default “text”) column from `data`
+- Optional columns from the input data (if data_return_cols specified)
+- Optional columns from `corporations_data` (if regex_return_cols
+  specified)
+- `pattern`: the regex pattern matched
+- `match`: the substring matched in the text
+- `simililarity`: this is the similarity matching score if `token`
+  method is selected based on Jaro-Winkler Similarity of the filtered
+  results for ordering purposes
+
+### Basic Usage
+
+The simplest use of
+[`extract()`](https://judgelord.github.io/corporations/reference/extract.md)
+with only the required arguments and specific return columns specified
+that demonstrate use cases. This finds all matches in the text column
+using the `corporations_data` and allows users to directly link company
+names with unique identifiers, determine which are publicly traded
+companies, and more.
+
+``` r
+# Extract patterns using only required arguments and the default mode = "match"
+result <- corporations::extract(
+  data = project_2025_coalition_and_contributors,
+  col_name = "organization",
+  data_return_cols = c("organization"),
+  regex_return_cols = c("cik", "ticker", "naics")
+)
+
+head(result)
+#> # A tibble: 6 × 7
+#>   row_id organization                        cik ticker  naics pattern                                             match
+#>    <int> <chr>                             <dbl> <chr>   <dbl> <chr>                                               <chr>
+#> 1     47 Patrick Henry College           1205813 ""         NA "\\b(?:patrick henry college)\\b"                   Patr…
+#> 2     71 Korn Ferry                        56679 "KFY"  561311 "\\b(?:korn ferry international|korn ferry)\\b"     Korn…
+#> 3     73 Taft Stettinius & Hollister LLP  909789 ""         NA "\\b(?:taft stettinius & hollister)\\b"             Taft…
+#> 4     76 Booz Allen Hamilton               13222 ""         NA "\\b(?:booz allen & hamilton|booz allen hamilton)\… Booz…
+#> 5     78 River Financial Inc.            1641601 ""         NA "\\b(?:river financial)\\b"                         Rive…
+#> 6     78 River Financial Inc.            1846407 ""         NA "\\b(?:river financial)\\b"                         Rive…
+```
