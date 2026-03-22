@@ -6,11 +6,13 @@
 *.RData
 *.RDataTmp
 *.csv
-*.rda
 
 # User-specific files
 .Ruserdata
 .DS_Store
+
+# Raw Files
+data-raw/
 
 # Example code in package build process
 *-Ex.R
