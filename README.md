@@ -36,6 +36,18 @@ For each matching substring, `corprations::extract` returns
 library(corporations)
 ```
 
+## Corporations Website
+
+The built in crosswalk of corporations does not provide the full list of
+aliases that a corporation may have or a certain corporation may not be
+included at all. In order to help improve the amount of corporations
+that can match with user text, we ask that users feel free to visit our
+suggestion website and make suggestions for the crosswalk. This includes
+adding additional aliases to corporations or providing entirely new
+ones. Note: package maintainers will need to approve suggestions before
+adding it to the real database of companies, which may take some time.
+[corporations-website](https://github.com/stevenhanwen/corporations-website)
+
 ## Data
 
 The examples below use an subset of the corporations_data crosswalk
@@ -54,22 +66,16 @@ head(project_2025_coalition_and_contributors)
 #> 5 Organization                    American Compass            Advisory Board Member
 #> 6 Organization           The American Conservative            Advisory Board Member
 
-data("corporations_data_sample")
-head(corporations_data_sample)
-#>                                                      aliases                                                clean_alias
-#> 1   DEFINED ASSET FUNDS MUNICIPAL INVT TR FD NEW YORK SER 33   defined asset funds municipal invt tr fd new york ser 33
-#> 2      CORPORATE INCOME FUND SEVENTY NINTH SHORT TERM SERIES      corporate income fund seventy ninth short term series
-#> 3  DEFINED ASSET FUNDS MUNICIPAL INVT TR FD MON PYMT SER 155  defined asset funds municipal invt tr fd mon pymt ser 155
-#> 4  DEFINED ASSET FUNDS MUNICIPAL INVT TR FD MON PYMT SER 156  defined asset funds municipal invt tr fd mon pymt ser 156
-#> 5 NUVEEN TAX EXEMPT UNIT TRUST SERIES 169 NATIONAL TRUST 169 nuveen tax exempt unit trust series 169 national trust 169
-#> 6          K TRON INTERNATIONAL INC|K Tron International Inc                                       k tron international
-#>   cik FED_RSSD ticker naics sources
-#> 1   3       NA   <NA>    NA     cik
-#> 2  13       NA   <NA>    NA     cik
-#> 3  14       NA   <NA>    NA     cik
-#> 4  17       NA   <NA>    NA     cik
-#> 5  18       NA   <NA>    NA     cik
-#> 6  20       NA   KTII    NA cik,sec
+# Temporarily using load() function because real crosswalk is not pushed to Github
+load("data-raw/corporations_data.rda")
+head(corporations_data)
+#>                                                      aliases cik FED_RSSD ticker naics sources
+#> 1   DEFINED ASSET FUNDS MUNICIPAL INVT TR FD NEW YORK SER 33   3       NA           NA     cik
+#> 2      CORPORATE INCOME FUND SEVENTY NINTH SHORT TERM SERIES  13       NA           NA     cik
+#> 3  DEFINED ASSET FUNDS MUNICIPAL INVT TR FD MON PYMT SER 155  14       NA           NA     cik
+#> 4  DEFINED ASSET FUNDS MUNICIPAL INVT TR FD MON PYMT SER 156  17       NA           NA     cik
+#> 5 NUVEEN TAX EXEMPT UNIT TRUST SERIES 169 NATIONAL TRUST 169  18       NA           NA     cik
+#> 6          K TRON INTERNATIONAL INC|K Tron International Inc  20       NA   KTII    NA cik,sec
 ```
 
 ## Filtering Corporations

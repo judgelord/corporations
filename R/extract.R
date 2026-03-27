@@ -171,13 +171,12 @@ extract <- function(data,
 
   result <- result[valid_rows, ]
 
-  if (verbose) message("Verifying matches via token consistency...")
-
   # Clean input and the match columns for comparison
   result$match_clean <- clean_org_alias(result$match)
   result$input_clean <- clean_org_alias(result[[col_name]])
 
   if (method == "token") {
+    if (verbose) message("Verifying matches via token consistency...")
     # Apply the Token Check and Jaro-Winkler Similarity
     result$token_score <- mapply(verify_tokens, result$input_clean, result$match_clean)
 
