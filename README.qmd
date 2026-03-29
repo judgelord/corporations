@@ -160,5 +160,5 @@ result <- corporations::extract(
   regex_return_cols = c("cik", "ticker", "naics")
 )
 
-head(result)
+result
 ```
