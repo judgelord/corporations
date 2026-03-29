@@ -104,13 +104,13 @@
 <span><span class="co"># Temporarily using load() function because real crosswalk is not pushed to Github</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="st">"data-raw/corporations_data.rda"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">corporations_data</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                                                      aliases cik FED_RSSD ticker naics sources</span></span>
-<span><span class="co">#&gt; 1   DEFINED ASSET FUNDS MUNICIPAL INVT TR FD NEW YORK SER 33   3       NA           NA     cik</span></span>
-<span><span class="co">#&gt; 2      CORPORATE INCOME FUND SEVENTY NINTH SHORT TERM SERIES  13       NA           NA     cik</span></span>
-<span><span class="co">#&gt; 3  DEFINED ASSET FUNDS MUNICIPAL INVT TR FD MON PYMT SER 155  14       NA           NA     cik</span></span>
-<span><span class="co">#&gt; 4  DEFINED ASSET FUNDS MUNICIPAL INVT TR FD MON PYMT SER 156  17       NA           NA     cik</span></span>
-<span><span class="co">#&gt; 5 NUVEEN TAX EXEMPT UNIT TRUST SERIES 169 NATIONAL TRUST 169  18       NA           NA     cik</span></span>
-<span><span class="co">#&gt; 6          K TRON INTERNATIONAL INC|K Tron International Inc  20       NA   KTII    NA cik,sec</span></span></code></pre></div>
+<span><span class="co">#&gt;                                                      aliases cik FED_RSSD ticker naics</span></span>
+<span><span class="co">#&gt; 1   Defined Asset Funds Municipal Invt Tr Fd New York Ser 33   3       NA           NA</span></span>
+<span><span class="co">#&gt; 2      Corporate Income Fund Seventy Ninth Short Term Series  13       NA           NA</span></span>
+<span><span class="co">#&gt; 3  Defined Asset Funds Municipal Invt Tr Fd Mon Pymt Ser 155  14       NA           NA</span></span>
+<span><span class="co">#&gt; 4  Defined Asset Funds Municipal Invt Tr Fd Mon Pymt Ser 156  17       NA           NA</span></span>
+<span><span class="co">#&gt; 5 Nuveen Tax Exempt Unit Trust Series 169 National Trust 169  18       NA           NA</span></span>
+<span><span class="co">#&gt; 6                                   K Tron International Inc  20       NA   KTII    NA</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="filtering-corporations">Filtering Corporations<a class="anchor" aria-label="anchor" href="#filtering-corporations"></a>
@@ -133,20 +133,13 @@
 <code class="sourceCode R"><span><span class="co"># Find public companies in the custom computer programming services sector (NAICS 541511) with stock tickers. </span></span>
 <span><span class="va">programming_services_public</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/filter.html">filter</a></span><span class="op">(</span>naics_codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">541511</span><span class="op">)</span>, public_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">programming_services_public</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                                                                                    aliases     cik FED_RSSD ticker</span></span>
-<span><span class="co">#&gt; 161                                ANALYSTS INTERNATIONAL CORP|Analysts International Corp    6292       NA   ANLY</span></span>
-<span><span class="co">#&gt; 2638                                                                       TSR INC|TSR Inc   98338       NA   TSRI</span></span>
-<span><span class="co">#&gt; 658841                                          GLIMPSE GROUP, INC.|GLIMPSE GROUP INC(THE) 1854445       NA   VRAR</span></span>
-<span><span class="co">#&gt; 669824                                                                            CI&amp;T INC 1868995       NA   CINT</span></span>
-<span><span class="co">#&gt; 744508 EVOLVING SYSTEMS INC|SYMBOLIC LOGIC, INC.|EVOLVING SYSTEMS INC|Evolving Systems Inc 1052054       NA   EVOL</span></span>
-<span><span class="co">#&gt; 745780                                    INFOSYS LTD|INFOSYS TECHNOLOGIES LTD|INFOSYS LTD 1067491       NA   INFY</span></span>
-<span><span class="co">#&gt;         naics           sources</span></span>
-<span><span class="co">#&gt; 161    541511 cik,compustat,sec</span></span>
-<span><span class="co">#&gt; 2638   541511 cik,compustat,sec</span></span>
-<span><span class="co">#&gt; 658841 541511     cik,compustat</span></span>
-<span><span class="co">#&gt; 669824 541511     cik,compustat</span></span>
-<span><span class="co">#&gt; 744508 541511 cik,compustat,sec</span></span>
-<span><span class="co">#&gt; 745780 541511     cik,compustat</span></span></code></pre></div>
+<span><span class="co">#&gt;                                           aliases     cik FED_RSSD ticker  naics</span></span>
+<span><span class="co">#&gt; 161                   Analysts International Corp    6292       NA   ANLY 541511</span></span>
+<span><span class="co">#&gt; 2638                                      Tsr Inc   98338       NA   TSRI 541511</span></span>
+<span><span class="co">#&gt; 658841 Glimpse Group, Inc.|Glimpse Group Inc(The) 1854445       NA   VRAR 541511</span></span>
+<span><span class="co">#&gt; 669824                                   Ci&amp;T Inc 1868995       NA   CINT 541511</span></span>
+<span><span class="co">#&gt; 744508  Evolving Systems Inc|Symbolic Logic, Inc. 1052054       NA   EVOL 541511</span></span>
+<span><span class="co">#&gt; 745780       Infosys Ltd|Infosys Technologies Ltd 1067491       NA   INFY 541511</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -256,8 +249,8 @@
 <span>  regex_return_cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"cik"</span>, <span class="st">"ticker"</span>, <span class="st">"naics"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 6 × 7</span></span>
+<span><span class="va">result</span></span>
+<span><span class="co">#&gt; # A tibble: 7 × 7</span></span>
 <span><span class="co">#&gt;   row_id organization                        cik ticker  naics pattern                                             match</span></span>
 <span><span class="co">#&gt;    &lt;int&gt; &lt;chr&gt;                             &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;                                               &lt;chr&gt;</span></span>
 <span><span class="co">#&gt; 1     47 Patrick Henry College           1205813 ""         NA "\\b(?:patrick henry college)\\b"                   Patr…</span></span>
@@ -265,7 +258,8 @@
 <span><span class="co">#&gt; 3     73 Taft Stettinius &amp; Hollister LLP  909789 ""         NA "\\b(?:taft stettinius &amp; hollister)\\b"             Taft…</span></span>
 <span><span class="co">#&gt; 4     76 Booz Allen Hamilton               13222 ""         NA "\\b(?:booz allen &amp; hamilton|booz allen hamilton)\… Booz…</span></span>
 <span><span class="co">#&gt; 5     78 River Financial Inc.            1641601 ""         NA "\\b(?:river financial)\\b"                         Rive…</span></span>
-<span><span class="co">#&gt; 6     78 River Financial Inc.            1846407 ""         NA "\\b(?:river financial)\\b"                         Rive…</span></span></code></pre></div>
+<span><span class="co">#&gt; 6     78 River Financial Inc.            1846407 ""         NA "\\b(?:river financial)\\b"                         Rive…</span></span>
+<span><span class="co">#&gt; 7     83 Baker Botts, LLP                1127752 ""         NA "\\b(?:baker botts)\\b"                             Bake…</span></span></code></pre></div>
 </div>
 </div>
 </div>

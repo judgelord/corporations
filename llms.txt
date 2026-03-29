@@ -70,13 +70,13 @@ head(project_2025_coalition_and_contributors)
 # Temporarily using load() function because real crosswalk is not pushed to Github
 load("data-raw/corporations_data.rda")
 head(corporations_data)
-#>                                                      aliases cik FED_RSSD ticker naics sources
-#> 1   DEFINED ASSET FUNDS MUNICIPAL INVT TR FD NEW YORK SER 33   3       NA           NA     cik
-#> 2      CORPORATE INCOME FUND SEVENTY NINTH SHORT TERM SERIES  13       NA           NA     cik
-#> 3  DEFINED ASSET FUNDS MUNICIPAL INVT TR FD MON PYMT SER 155  14       NA           NA     cik
-#> 4  DEFINED ASSET FUNDS MUNICIPAL INVT TR FD MON PYMT SER 156  17       NA           NA     cik
-#> 5 NUVEEN TAX EXEMPT UNIT TRUST SERIES 169 NATIONAL TRUST 169  18       NA           NA     cik
-#> 6          K TRON INTERNATIONAL INC|K Tron International Inc  20       NA   KTII    NA cik,sec
+#>                                                      aliases cik FED_RSSD ticker naics
+#> 1   Defined Asset Funds Municipal Invt Tr Fd New York Ser 33   3       NA           NA
+#> 2      Corporate Income Fund Seventy Ninth Short Term Series  13       NA           NA
+#> 3  Defined Asset Funds Municipal Invt Tr Fd Mon Pymt Ser 155  14       NA           NA
+#> 4  Defined Asset Funds Municipal Invt Tr Fd Mon Pymt Ser 156  17       NA           NA
+#> 5 Nuveen Tax Exempt Unit Trust Series 169 National Trust 169  18       NA           NA
+#> 6                                   K Tron International Inc  20       NA   KTII    NA
 ```
 
 ## Filtering Corporations
@@ -106,20 +106,13 @@ companies.
 # Find public companies in the custom computer programming services sector (NAICS 541511) with stock tickers. 
 programming_services_public <- filter(naics_codes = c(541511), public_only = TRUE)
 head(programming_services_public)
-#>                                                                                    aliases     cik FED_RSSD ticker
-#> 161                                ANALYSTS INTERNATIONAL CORP|Analysts International Corp    6292       NA   ANLY
-#> 2638                                                                       TSR INC|TSR Inc   98338       NA   TSRI
-#> 658841                                          GLIMPSE GROUP, INC.|GLIMPSE GROUP INC(THE) 1854445       NA   VRAR
-#> 669824                                                                            CI&T INC 1868995       NA   CINT
-#> 744508 EVOLVING SYSTEMS INC|SYMBOLIC LOGIC, INC.|EVOLVING SYSTEMS INC|Evolving Systems Inc 1052054       NA   EVOL
-#> 745780                                    INFOSYS LTD|INFOSYS TECHNOLOGIES LTD|INFOSYS LTD 1067491       NA   INFY
-#>         naics           sources
-#> 161    541511 cik,compustat,sec
-#> 2638   541511 cik,compustat,sec
-#> 658841 541511     cik,compustat
-#> 669824 541511     cik,compustat
-#> 744508 541511 cik,compustat,sec
-#> 745780 541511     cik,compustat
+#>                                           aliases     cik FED_RSSD ticker  naics
+#> 161                   Analysts International Corp    6292       NA   ANLY 541511
+#> 2638                                      Tsr Inc   98338       NA   TSRI 541511
+#> 658841 Glimpse Group, Inc.|Glimpse Group Inc(The) 1854445       NA   VRAR 541511
+#> 669824                                   Ci&T Inc 1868995       NA   CINT 541511
+#> 744508  Evolving Systems Inc|Symbolic Logic, Inc. 1052054       NA   EVOL 541511
+#> 745780       Infosys Ltd|Infosys Technologies Ltd 1067491       NA   INFY 541511
 ```
 
 ## Text cleaning
@@ -244,8 +237,8 @@ result <- corporations::extract(
   regex_return_cols = c("cik", "ticker", "naics")
 )
 
-head(result)
-#> # A tibble: 6 × 7
+result
+#> # A tibble: 7 × 7
 #>   row_id organization                        cik ticker  naics pattern                                             match
 #>    <int> <chr>                             <dbl> <chr>   <dbl> <chr>                                               <chr>
 #> 1     47 Patrick Henry College           1205813 ""         NA "\\b(?:patrick henry college)\\b"                   Patr…
@@ -254,6 +247,7 @@ head(result)
 #> 4     76 Booz Allen Hamilton               13222 ""         NA "\\b(?:booz allen & hamilton|booz allen hamilton)\… Booz…
 #> 5     78 River Financial Inc.            1641601 ""         NA "\\b(?:river financial)\\b"                         Rive…
 #> 6     78 River Financial Inc.            1846407 ""         NA "\\b(?:river financial)\\b"                         Rive…
+#> 7     83 Baker Botts, LLP                1127752 ""         NA "\\b(?:baker botts)\\b"                             Bake…
 ```
 
 # Package index
