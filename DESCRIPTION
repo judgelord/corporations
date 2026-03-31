@@ -11,7 +11,7 @@ Description: This package allows social scientists to easily link records on cor
     of new datasets of corporation behavior by identifying corporation names in unstructured text and linking 
     these mentions to other datasets (for example, linking mentions of corporations in politicians’ speeches 
     with campaign donation data). 
-License: MIT LICENSE
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
