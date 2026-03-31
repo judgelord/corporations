@@ -5,15 +5,11 @@ Flag incorrect name matches or suggest missing aliases.
 ## Usage
 
 ``` r
-report_fix(results, corporations_data = NULL)
+report_fix(results)
 ```
 
 ## Arguments
 
 - results:
 
-  The dataframe returned from the extract() function.
-
-- corporations_data:
-
-  The built-in data for reference (optional here).
+  The tibble returned from the extract() function.

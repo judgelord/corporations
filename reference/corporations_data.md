@@ -1,20 +1,31 @@
 # corporations_data dataset
 
 A crosswalk lookup table of hundreds of thousands of corporations for
-regex matching and company searching TODO: ONCE FINAL CROSSWALK IS
-DESIGNED, ADD DOCUMENTATION FOR THIS DATA
+regular expression matching and company searching
 
 ## Format
 
-A tibble with \_\_\_\_ columns:
+A tibble with 5 columns:
 
-- column_1:
+- aliases:
 
-  Description of column 1
+  aliases of a certain company (each one seperated by '\|')
 
-- column_2:
+- cik:
 
-  Description of column 2
+  Central Index Key of a corporation (numeric)
+
+- FED_RSSD:
+
+  Research, Statistics, Supervision, and Discount identifier (numeric)
+
+- ticker:
+
+  Stock ticker of a corporation
+
+- naics:
+
+  North American Industry Classification System (NAICS) codes (numeric)
 
 ## Source
 

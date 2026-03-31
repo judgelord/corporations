@@ -113,40 +113,10 @@
 <span><span class="co">#&gt; 6                                   K Tron International Inc  20       NA   KTII    NA</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="filtering-corporations">Filtering Corporations<a class="anchor" aria-label="anchor" href="#filtering-corporations"></a>
-</h2>
-<p>Before running a large extraction job, you may want to explore the corporations crosswalk or limit your search to specific types of entities (e.g., only publicly traded companies or specific industries). The <code><a href="reference/filter.html">filter()</a></code> function allows you to subset the internal crosswalk to specific companies.</p>
-<div class="section level3">
-<h3 id="parameters">Parameters<a class="anchor" aria-label="anchor" href="#parameters"></a>
-</h3>
-<ul>
-<li>
-<strong><code>naics_codes</code></strong>: (default <code>NULL</code>) Vector of NAICS codes to filter the dictionary. If NULL, all industries are included.</li>
-<li>
-<strong><code>public_only</code></strong>: (default <code>False</code>) if TRUE, subsets the dictionary to only include corporations with stock tickers.</li>
-<li>
-<strong><code>search_term</code></strong>: (default <code>NULL</code>) Character string; if provided, filters the company names using a partial string match (case-insensitive).</li>
-<li>
-<strong><code>corporations_return_cols</code></strong>: (default <code>c("aliases", "cik", "FED_RSSD")</code>) Vector of column names to include from the built-in corporations data (e.g., “FED_RSSD”, “CIK”).</li>
-</ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Find public companies in the custom computer programming services sector (NAICS 541511) with stock tickers. </span></span>
-<span><span class="va">programming_services_public</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/filter.html">filter</a></span><span class="op">(</span>naics_codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">541511</span><span class="op">)</span>, public_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">programming_services_public</span><span class="op">)</span></span>
-<span><span class="co">#&gt;                                           aliases     cik FED_RSSD ticker  naics</span></span>
-<span><span class="co">#&gt; 161                   Analysts International Corp    6292       NA   ANLY 541511</span></span>
-<span><span class="co">#&gt; 2638                                      Tsr Inc   98338       NA   TSRI 541511</span></span>
-<span><span class="co">#&gt; 658841 Glimpse Group, Inc.|Glimpse Group Inc(The) 1854445       NA   VRAR 541511</span></span>
-<span><span class="co">#&gt; 669824                                   Ci&amp;T Inc 1868995       NA   CINT 541511</span></span>
-<span><span class="co">#&gt; 744508  Evolving Systems Inc|Symbolic Logic, Inc. 1052054       NA   EVOL 541511</span></span>
-<span><span class="co">#&gt; 745780       Infosys Ltd|Infosys Technologies Ltd 1067491       NA   INFY 541511</span></span></code></pre></div>
-</div>
-</div>
-<div class="section level2">
 <h2 id="text-cleaning">Text cleaning<a class="anchor" aria-label="anchor" href="#text-cleaning"></a>
 </h2>
 <p>Before matching, by default, <code>clean_text()</code> from the <a href="https://github.com/judgelord/regextable" class="external-link">regextable</a> is applied to standardize text for better matching in messy text. It converts text to lowercase, removes excess punctuation, replaces line breaks and dashes with spaces, and collapses multiple spaces into a single space. Text cleaning is applied only during matching and does not modify the original input data. Users can disable this behavior by setting <code>do_clean_text = FALSE</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">text</span> <span class="op">&lt;-</span> <span class="st">"  HELLO---WORLD  "</span></span>
 <span><span class="va">cleaned_text</span> <span class="op">&lt;-</span> <span class="fu">regextable</span><span class="fu">::</span><span class="fu"><a href="https://judgelord.github.io/regextable/reference/clean_text.html" class="external-link">clean_text</a></span><span class="op">(</span><span class="va">text</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">cleaned_text</span><span class="op">)</span></span>
@@ -237,10 +207,11 @@
 </ul>
 </div>
 <div class="section level3">
-<h3 id="basic-usage">Basic Usage<a class="anchor" aria-label="anchor" href="#basic-usage"></a>
+<h3 id="basic-usage-of-extract">Basic Usage of <code>extract()</code>
+<a class="anchor" aria-label="anchor" href="#basic-usage-of-extract"></a>
 </h3>
 <p>The simplest use of <code><a href="reference/extract.html">extract()</a></code> with only the required arguments and specific return columns specified that demonstrate use cases. This finds all matches in the text column using the <code>corporations_data</code> and allows users to directly link company names with unique identifiers, determine which are publicly traded companies, and more.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Extract patterns using only required arguments and the default mode = "match"</span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">corporations</span><span class="fu">::</span><span class="fu"><a href="reference/extract.html">extract</a></span><span class="op">(</span></span>
 <span>  data <span class="op">=</span> <span class="va">project_2025_coalition_and_contributors</span>,</span>
@@ -260,6 +231,50 @@
 <span><span class="co">#&gt; 5     78 River Financial Inc.            1641601 ""         NA "\\b(?:river financial)\\b"                         Rive…</span></span>
 <span><span class="co">#&gt; 6     78 River Financial Inc.            1846407 ""         NA "\\b(?:river financial)\\b"                         Rive…</span></span>
 <span><span class="co">#&gt; 7     83 Baker Botts, LLP                1127752 ""         NA "\\b(?:baker botts)\\b"                             Bake…</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="filtering-corporations">Filtering Corporations<a class="anchor" aria-label="anchor" href="#filtering-corporations"></a>
+</h2>
+<p>The <code>corporations</code> package enables exploration of the corporations crosswalk by limiting your search to specific types of entities (e.g., only publicly traded companies or specific industries). The <code><a href="reference/filter.html">filter()</a></code> function allows you to subset the internal crosswalk to specific companies.</p>
+<div class="section level3">
+<h3 id="parameters">Parameters<a class="anchor" aria-label="anchor" href="#parameters"></a>
+</h3>
+<ul>
+<li>
+<strong><code>naics_codes</code></strong>: (default <code>NULL</code>) Vector of NAICS codes to filter the dictionary. If NULL, all industries are included.</li>
+<li>
+<strong><code>public_only</code></strong>: (default <code>False</code>) if TRUE, subsets the dictionary to only include corporations with stock tickers.</li>
+<li>
+<strong><code>search_term</code></strong>: (default <code>NULL</code>) Character string; if provided, filters the company names using a partial string match (case-insensitive).</li>
+<li>
+<strong><code>corporations_return_cols</code></strong>: (default <code>c("aliases", "cik", "FED_RSSD")</code>) Vector of column names to include from the built-in corporations data (e.g., “FED_RSSD”, “CIK”).</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Find public companies in the custom computer programming services sector (NAICS 541511) with stock tickers. </span></span>
+<span><span class="va">programming_services_public</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/filter.html">filter</a></span><span class="op">(</span>naics_codes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">541511</span><span class="op">)</span>, public_only <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">programming_services_public</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                                           aliases     cik FED_RSSD ticker  naics</span></span>
+<span><span class="co">#&gt; 161                   Analysts International Corp    6292       NA   ANLY 541511</span></span>
+<span><span class="co">#&gt; 2638                                      Tsr Inc   98338       NA   TSRI 541511</span></span>
+<span><span class="co">#&gt; 658841 Glimpse Group, Inc.|Glimpse Group Inc(The) 1854445       NA   VRAR 541511</span></span>
+<span><span class="co">#&gt; 669824                                   Ci&amp;T Inc 1868995       NA   CINT 541511</span></span>
+<span><span class="co">#&gt; 744508  Evolving Systems Inc|Symbolic Logic, Inc. 1052054       NA   EVOL 541511</span></span>
+<span><span class="co">#&gt; 745780       Infosys Ltd|Infosys Technologies Ltd 1067491       NA   INFY 541511</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="reporting-matching-issues">Reporting Matching Issues<a class="anchor" aria-label="anchor" href="#reporting-matching-issues"></a>
+</h2>
+<p>The <code><a href="reference/report_fix.html">report_fix()</a></code> function allows users to flag incorrect name matches or suggest missing aliases through a GitHub issue that is automatically formatted and prompts the user for questions regarding the report. However, we highly suggest to do this kind of suggestion on the <a href="https://github.com/stevenhanwen/corporations-website" class="external-link">corporations-website</a> for a more smoother experience. In addition, you will need a GitHub account to use this reporting method.</p>
+<div class="section level3">
+<h3 id="parameters-1">Parameters<a class="anchor" aria-label="anchor" href="#parameters-1"></a>
+</h3>
+<ul>
+<li>
+<strong><code>results</code></strong>: The tibble returned from the extract() function</li>
+</ul>
+<p><em>Example of automatically formatted GitHub issue after running <code><a href="reference/report_fix.html">report_fix()</a></code></em> <img src="reference/figures/report_fix()-example.png" style="width:80.0%"></p>
 </div>
 </div>
 </div>

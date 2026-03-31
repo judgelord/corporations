@@ -2,8 +2,6 @@
 
 ## All functions
 
-- [`clean_org_alias()`](https://judgelord.github.io/corporations/reference/clean_org_alias.md)
-  : Clean Corporate Suffixes
 - [`corporations_data`](https://judgelord.github.io/corporations/reference/corporations_data.md)
   : corporations_data dataset
 - [`extract()`](https://judgelord.github.io/corporations/reference/extract.md)

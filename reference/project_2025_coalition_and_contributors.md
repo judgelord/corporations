@@ -1,19 +1,33 @@
 # project_2025_coalition_and_contributors dataset
 
-Extracted corporations and individual contributors from Project 2025
+Sample text dataset used for demonstration of \`corporations\`.
 
 ## Format
 
-A tibble with \_\_\_\_ columns:
+A tibble with 4 columns:
 
-- column_1:
+- type:
 
-  Description of column 1
+  Reference to either a organization or individual contributor in the
+  document
 
-- column_2:
+- organization:
 
-  Description of column 2
+  The organization itself or one that is associated with the individual
+
+- individual:
+
+  The individual's name if type is 'Individual'
+
+- role:
+
+  The relationship between the organization/individual with Project 2025
 
 ## Source
 
 <https://static.heritage.org/project2025/2025_MandateForLeadership_FULL.pdf>
+
+## Details
+
+Extracted corporations and individual mentioned inside Project 2025's
+“Mandate for Leadership: The Conservative Promise”.
