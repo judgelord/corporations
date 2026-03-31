@@ -69,22 +69,6 @@ load("data-raw/corporations_data.rda")
 head(corporations_data)
 ```
 
-## Filtering Corporations
-
-Before running a large extraction job, you may want to explore the corporations crosswalk or limit your search to specific types of entities (e.g., only publicly traded companies or specific industries). The `filter()` function allows you to subset the internal crosswalk to specific companies. 
-
-### Parameters
-
--   **`naics_codes`**: (default `NULL`) Vector of NAICS codes to filter the dictionary. If NULL, all industries are included.
--   **`public_only`**: (default `False`) if TRUE, subsets the dictionary to only include corporations with stock tickers.
--   **`search_term`**: (default `NULL`) Character string; if provided, filters the company names using a partial string match (case-insensitive).
--   **`corporations_return_cols`**: (default `c("aliases", "cik", "FED_RSSD")`) Vector of column names to include from the built-in corporations data (e.g., "FED_RSSD", "CIK").
-```{r}
-# Find public companies in the custom computer programming services sector (NAICS 541511) with stock tickers. 
-programming_services_public <- filter(naics_codes = c(541511), public_only = TRUE)
-head(programming_services_public)
-```
-
 ## Text cleaning
 
 Before matching, by default, `clean_text()` from the [regextable](https://github.com/judgelord/regextable) is applied to standardize text for better matching in messy text. It converts text to lowercase, removes excess punctuation, replaces line breaks and dashes with spaces, and collapses multiple spaces into a single space. Text cleaning is applied only during matching and does not modify the original input data. Users can disable this behavior by setting `do_clean_text = FALSE`.
@@ -147,7 +131,7 @@ A data frame with one row per match, including:
 - `match`: the substring matched in the text
 - `simililarity`: this is the similarity matching score if `token` method is selected based on Jaro-Winkler Similarity of the filtered results for ordering purposes
 
-### Basic Usage
+### Basic Usage of `extract()`
 
 The simplest use of `extract()` with only the required arguments and specific return columns specified that demonstrate use cases. This finds all matches in the text column using the `corporations_data` and allows users to directly link company names with unique identifiers, determine which are publicly traded companies, and more. 
 
@@ -162,3 +146,32 @@ result <- corporations::extract(
 
 result
 ```
+
+## Filtering Corporations
+
+The `corporations` package enables exploration of the corporations crosswalk by limiting your search to specific types of entities (e.g., only publicly traded companies or specific industries). The `filter()` function allows you to subset the internal crosswalk to specific companies. 
+
+### Parameters
+
+-   **`naics_codes`**: (default `NULL`) Vector of NAICS codes to filter the dictionary. If NULL, all industries are included.
+-   **`public_only`**: (default `False`) if TRUE, subsets the dictionary to only include corporations with stock tickers.
+-   **`search_term`**: (default `NULL`) Character string; if provided, filters the company names using a partial string match (case-insensitive).
+-   **`corporations_return_cols`**: (default `c("aliases", "cik", "FED_RSSD")`) Vector of column names to include from the built-in corporations data (e.g., "FED_RSSD", "CIK").
+```{r}
+# Find public companies in the custom computer programming services sector (NAICS 541511) with stock tickers. 
+programming_services_public <- filter(naics_codes = c(541511), public_only = TRUE)
+head(programming_services_public)
+```
+
+## Reporting Matching Issues
+
+The `report_fix()` function allows users to flag incorrect name matches or suggest missing aliases through a GitHub issue that is automatically formatted and prompts the user for questions regarding the report. However, we highly suggest to do this kind of suggestion on the [corporations-website](https://github.com/stevenhanwen/corporations-website) for a more smoother experience. In addition, you will need a GitHub account to use this reporting method. 
+
+### Parameters
+
+-   **`results`**: The tibble returned from the extract() function
+
+*Example of automatically formatted GitHub issue after running `report_fix()`*
+![](man/figures/report_fix()-example.png){width=80%}
+
+

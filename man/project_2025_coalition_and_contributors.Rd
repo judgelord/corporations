@@ -5,15 +5,20 @@
 \alias{project_2025_coalition_and_contributors}
 \title{project_2025_coalition_and_contributors dataset}
 \format{
-A tibble with ____ columns:
+A tibble with 4 columns:
 \describe{
-  \item{column_1}{Description of column 1}
-  \item{column_2}{Description of column 2}
+  \item{type}{Reference to either a organization or individual contributor in the document}
+  \item{organization}{The organization itself or one that is associated with the individual}
+  \item{individual}{The individual's name if type is 'Individual'}
+  \item{role}{The relationship between the organization/individual with Project 2025}
 }
 }
 \source{
 \url{https://static.heritage.org/project2025/2025_MandateForLeadership_FULL.pdf}
 }
 \description{
-Extracted corporations and individual contributors from Project 2025
+Sample text dataset used for demonstration of `corporations`.
+}
+\details{
+Extracted corporations and individual mentioned inside Project 2025's “Mandate for Leadership: The Conservative Promise”.
 }

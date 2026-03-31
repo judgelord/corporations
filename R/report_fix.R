@@ -1,9 +1,8 @@
 #' @title Report corporations matches
 #' @description Flag incorrect name matches or suggest missing aliases.
-#' @param results The dataframe returned from the extract() function.
-#' @param corporations_data The built-in data for reference (optional here).
+#' @param results The tibble returned from the extract() function.
 #' @export
-report_fix <- function(results, corporations_data = NULL) {
+report_fix <- function(results) {
 
   message("--- Name Match Review ---")
   print(results[, c("match", "pattern")])

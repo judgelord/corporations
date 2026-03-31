@@ -2,7 +2,7 @@
 #' @description Removes common legal suffixes and trailing punctuation from entity names.
 #' @param x A character vector of names.
 #' @return A cleaned character vector.
-#' @export
+#' @noRd
 clean_org_alias <- function(x) {
   x <- tolower(x)
   suffixes <- c("\\binc\\b", "\\bcorp\\b", "\\bcorporation\\b",

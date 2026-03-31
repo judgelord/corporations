@@ -78,40 +78,6 @@ head(corporations_data)
 #> 6                                   K Tron International Inc  20       NA   KTII    NA
 ```
 
-## Filtering Corporations
-
-Before running a large extraction job, you may want to explore the
-corporations crosswalk or limit your search to specific types of
-entities (e.g., only publicly traded companies or specific industries).
-The `filter()` function allows you to subset the internal crosswalk to
-specific companies.
-
-### Parameters
-
-- **`naics_codes`**: (default `NULL`) Vector of NAICS codes to filter
-  the dictionary. If NULL, all industries are included.
-- **`public_only`**: (default `False`) if TRUE, subsets the dictionary
-  to only include corporations with stock tickers.
-- **`search_term`**: (default `NULL`) Character string; if provided,
-  filters the company names using a partial string match
-  (case-insensitive).
-- **`corporations_return_cols`**: (default
-  `c("aliases", "cik", "FED_RSSD")`) Vector of column names to include
-  from the built-in corporations data (e.g., “FED_RSSD”, “CIK”).
-
-``` r
-# Find public companies in the custom computer programming services sector (NAICS 541511) with stock tickers. 
-programming_services_public <- filter(naics_codes = c(541511), public_only = TRUE)
-head(programming_services_public)
-#>                                           aliases     cik FED_RSSD ticker  naics
-#> 161                   Analysts International Corp    6292       NA   ANLY 541511
-#> 2638                                      Tsr Inc   98338       NA   TSRI 541511
-#> 658841 Glimpse Group, Inc.|Glimpse Group Inc(The) 1854445       NA   VRAR 541511
-#> 669824                                   Ci&T Inc 1868995       NA   CINT 541511
-#> 744508  Evolving Systems Inc|Symbolic Logic, Inc. 1052054       NA   EVOL 541511
-#> 745780       Infosys Ltd|Infosys Technologies Ltd 1067491       NA   INFY 541511
-```
-
 ## Text cleaning
 
 Before matching, by default, `clean_text()` from the
@@ -214,7 +180,7 @@ A data frame with one row per match, including:
   method is selected based on Jaro-Winkler Similarity of the filtered
   results for ordering purposes
 
-### Basic Usage
+### Basic Usage of `extract()`
 
 The simplest use of `extract()` with only the required arguments and
 specific return columns specified that demonstrate use cases. This finds
@@ -243,3 +209,55 @@ result
 #> 6     78 River Financial Inc.            1846407 ""         NA "\\b(?:river financial)\\b"                         Rive…
 #> 7     83 Baker Botts, LLP                1127752 ""         NA "\\b(?:baker botts)\\b"                             Bake…
 ```
+
+## Filtering Corporations
+
+The `corporations` package enables exploration of the corporations
+crosswalk by limiting your search to specific types of entities (e.g.,
+only publicly traded companies or specific industries). The `filter()`
+function allows you to subset the internal crosswalk to specific
+companies.
+
+### Parameters
+
+- **`naics_codes`**: (default `NULL`) Vector of NAICS codes to filter
+  the dictionary. If NULL, all industries are included.
+- **`public_only`**: (default `False`) if TRUE, subsets the dictionary
+  to only include corporations with stock tickers.
+- **`search_term`**: (default `NULL`) Character string; if provided,
+  filters the company names using a partial string match
+  (case-insensitive).
+- **`corporations_return_cols`**: (default
+  `c("aliases", "cik", "FED_RSSD")`) Vector of column names to include
+  from the built-in corporations data (e.g., “FED_RSSD”, “CIK”).
+
+``` r
+# Find public companies in the custom computer programming services sector (NAICS 541511) with stock tickers. 
+programming_services_public <- filter(naics_codes = c(541511), public_only = TRUE)
+head(programming_services_public)
+#>                                           aliases     cik FED_RSSD ticker  naics
+#> 161                   Analysts International Corp    6292       NA   ANLY 541511
+#> 2638                                      Tsr Inc   98338       NA   TSRI 541511
+#> 658841 Glimpse Group, Inc.|Glimpse Group Inc(The) 1854445       NA   VRAR 541511
+#> 669824                                   Ci&T Inc 1868995       NA   CINT 541511
+#> 744508  Evolving Systems Inc|Symbolic Logic, Inc. 1052054       NA   EVOL 541511
+#> 745780       Infosys Ltd|Infosys Technologies Ltd 1067491       NA   INFY 541511
+```
+
+## Reporting Matching Issues
+
+The `report_fix()` function allows users to flag incorrect name matches
+or suggest missing aliases through a GitHub issue that is automatically
+formatted and prompts the user for questions regarding the report.
+However, we highly suggest to do this kind of suggestion on the
+[corporations-website](https://github.com/stevenhanwen/corporations-website)
+for a more smoother experience. In addition, you will need a GitHub
+account to use this reporting method.
+
+### Parameters
+
+- **`results`**: The tibble returned from the extract() function
+
+*Example of automatically formatted GitHub issue after running
+`report_fix()`*
+<img src="man/figures/report_fix()-example.png" style="width:80.0%" />

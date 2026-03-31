@@ -5,16 +5,18 @@
 \alias{corporations_data}
 \title{corporations_data dataset}
 \format{
-A tibble with ____ columns:
+A tibble with 5 columns:
 \describe{
-  \item{column_1}{Description of column 1}
-  \item{column_2}{Description of column 2}
+  \item{aliases}{aliases of a certain company (each one seperated by '|')}
+  \item{cik}{Central Index Key of a corporation (numeric)}
+  \item{FED_RSSD}{Research, Statistics, Supervision, and Discount identifier (numeric)}
+  \item{ticker}{Stock ticker of a corporation}
+  \item{naics}{North American Industry Classification System (NAICS) codes (numeric)}
 }
 }
 \source{
 Generated for the `corporations` package
 }
 \description{
-A crosswalk lookup table of hundreds of thousands of corporations for regex matching and company searching
-TODO: ONCE FINAL CROSSWALK IS DESIGNED, ADD DOCUMENTATION FOR THIS DATA
+A crosswalk lookup table of hundreds of thousands of corporations for regular expression matching and company searching
 }

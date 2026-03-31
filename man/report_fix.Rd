@@ -4,12 +4,10 @@
 \alias{report_fix}
 \title{Report corporations matches}
 \usage{
-report_fix(results, corporations_data = NULL)
+report_fix(results)
 }
 \arguments{
-\item{results}{The dataframe returned from the extract() function.}
-
-\item{corporations_data}{The built-in data for reference (optional here).}
+\item{results}{The tibble returned from the extract() function.}
 }
 \description{
 Flag incorrect name matches or suggest missing aliases.

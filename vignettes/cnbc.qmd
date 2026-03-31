@@ -57,11 +57,11 @@ cnbc_df <- cnbc_df[trimws(cnbc_df$headline) != "", , drop = FALSE]
 
 # Run the extract function
 # Note: we tell the function to look in the "headline" column
-results <- extract(
+results <- corporations::extract(
   data = cnbc_df,
   col_name = "headline",
   mode = "search",
-  regex_return_cols = c("aliases", "cik"),
+  regex_return_cols = c("aliases", "cik", "ticker"),
   verbose = TRUE
  )
 
