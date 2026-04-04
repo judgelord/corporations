@@ -5,7 +5,7 @@
 report_fix <- function(results) {
 
   message("--- Name Match Review ---")
-  print(results[, c("match", "pattern")])
+  print(results[, setdiff(names(results), c("row_id", "cik", "ticker", "naics"))])
 
   action <- readline(prompt = "\nChoose an action:\n1: A match is WRONG\n2: A match is MISSING\n3: Exit\nSelection: ")
 
@@ -23,7 +23,7 @@ report_fix <- function(results) {
     wrong_name <- results$match[row_idx]
     message(paste0("\nYou flagged '", wrong_name, "' as incorrect."))
 
-    correct_name <- readline(prompt = "What is the correct company name for this entry? ")
+    correct_name <- readline(prompt = "What is a correct company alias for this entry? ")
     description  <- readline(prompt = "Optional: Provide a brief description/reason for this fix: ")
 
     send_to_github(input = wrong_name, suggestion = correct_name, type = "Correction", desc = description)
@@ -31,7 +31,7 @@ report_fix <- function(results) {
 
   # A match is missing
   if (action == "2") {
-    missing_input <- readline(prompt = "What text did the algorithm miss? (e.g. 'BP'): ")
+    missing_input <- readline(prompt = "What text in your data did the algorithm miss an alias for? (e.g. 'BP'): ")
     correct_name  <- readline(prompt = "Which company name should it have matched to? ")
     description   <- readline(prompt = "Optional: Provide a brief description/reason for this fix: ")
 
@@ -47,7 +47,7 @@ send_to_github <- function(input, suggestion, type, desc = "") {
   body_content <- paste0(
     "### Name Match Feedback (", type, ")\n\n",
     "- **Text found in user data:** `", input, "`\n",
-    "- **Should match this Company:** `", suggestion, "`\n",
+    "- **Should match this company name:** `", suggestion, "`\n",
     "- **Description/Notes:** ", desc_text, "\n\n",
     "Please update the main corporations data crosswalk."
   )

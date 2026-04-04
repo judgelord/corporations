@@ -108,7 +108,6 @@ NOTE: When using mode = "search", the package will prompt you to download a ~15M
 -   **`mode`**: (default `match`) Use `match` for direct matching or `search` for matching after extraction from longer text.
 -   **`data_return_cols`**: (default `NULL`) Vector of additional columns from `data` to include in the output.
 -   **`regex_return_cols`**: (default `NULL`) Vector of additional columns from `corporations_data` to include in the output (e.g., "FED_RSSD", "CIK").
--   **do_fuzzy_matching**: (default `TRUE`) If TRUE, applies fuzzy matching to the regular expression matches and includes another column of confidence scores for the matches.
 -   **`remove_acronyms`**: (default `FALSE`) If `TRUE`, removes all-uppercase patterns from `regex_table`.
 -   **`do_clean_text`**: (default `TRUE`) If `TRUE`, cleans text before matching.
 -   **`verbose`**: (default `TRUE`) If `TRUE`, displays progress messages.

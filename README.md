@@ -145,9 +145,6 @@ match the same text, multiple rows are returned, one per match.
 - **`regex_return_cols`**: (default `NULL`) Vector of additional columns
   from `corporations_data` to include in the output (e.g., “FED_RSSD”,
   “CIK”).
-- **do_fuzzy_matching**: (default `TRUE`) If TRUE, applies fuzzy
-  matching to the regular expression matches and includes another column
-  of confidence scores for the matches.
 - **`remove_acronyms`**: (default `FALSE`) If `TRUE`, removes
   all-uppercase patterns from `regex_table`.
 - **`do_clean_text`**: (default `TRUE`) If `TRUE`, cleans text before
