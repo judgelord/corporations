@@ -96,25 +96,29 @@ extract <- function(data,
     data[[col_name]] <- entities_agg$token
   }
 
-  # Setup Data
-  regex_lookup <- corporations_data
 
   op <- pbapply::pboptions(type = if (verbose) "timer" else "none")
   on.exit(pbapply::pboptions(op))
 
-  if (verbose) {
-    message("Cleaning corporate aliases and removing suffixes...")
-  }
-  # Pattern Preparation
-  regex_lookup$pattern <- pbapply::pbsapply(regex_lookup$aliases, function(x) {
-    raw <- clean_org_alias(x)
-    parts <- unlist(strsplit(raw, "\\|"))
-    paste(unique(trimws(parts)), collapse = "|")
-  }, cl = cl)
+  # Setup Data
+  # Check if we already did cleaning before on the corporations_data.
+  if (!is.null(.cache$corporations_data)) {
+    regex_lookup <- .cache$corporations_data
+  } else {
+    regex_lookup <- corporations_data
 
-  regex_lookup <- regex_lookup[nchar(regex_lookup$pattern) > 1, ]
-  # Word boundaries to ensure substrings do not match
-  regex_lookup$pattern <- paste0("\\b(?:", regex_lookup$pattern, ")\\b")
+    if (verbose) message("Cleaning corporate aliases and removing suffixes...")
+
+    regex_lookup$pattern <- pbapply::pbsapply(regex_lookup$aliases, function(x) {
+      raw <- clean_org_alias(x)
+      parts <- unlist(strsplit(raw, "\\|"))
+      paste(unique(trimws(parts)), collapse = "|")
+    }, cl = cl)
+
+    regex_lookup <- regex_lookup[nchar(regex_lookup$pattern) > 1, ]
+    regex_lookup$pattern <- paste0("\\b(?:", regex_lookup$pattern, ")\\b")
+    .cache$corporations_data <- regex_lookup
+  }
 
   # Convert to tibble if is a character vector
   if (is.character(data)) {
@@ -191,7 +195,7 @@ extract <- function(data,
     result$token_score <- NULL
 
     # Order results based on substring similarity
-    results <- result[order(-result$similarity), ]
+    result <- result[order(-result$similarity), ]
   }
   else {
     # Only keep the match is the match is exactly the same as the cleaned name
