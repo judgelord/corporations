@@ -143,6 +143,7 @@ extract <- function(data,
   }
 
   # Extraction via regextable package
+  if (verbose) message("Doing regular expression matching...")
   final_return_cols <- unique(c(col_name, data_return_cols))
   result <- regextable::extract(
     data = data,
@@ -175,6 +176,7 @@ extract <- function(data,
 
   result <- result[valid_rows, ]
 
+  if (verbose) message(sprintf("Doing %s mode matching", mode))
   # Clean input and the match columns for comparison
   result$match_clean <- clean_org_alias(result$match)
   result$input_clean <- clean_org_alias(result[[col_name]])
@@ -204,7 +206,7 @@ extract <- function(data,
 
   result$match_clean <- NULL
   result$input_clean <- NULL
-  if (verbose) message("Finished Matching!")
+  if (verbose) message(sprintf("Finished Matching! Final number of matches is: %d", nrow(result)))
   return(result)
 }
 
