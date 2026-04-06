@@ -83,12 +83,12 @@ head(corporations_data)
 
 Before matching, by default, `clean_text()` from the
 [regextable](https://github.com/judgelord/regextable) is applied to
-standardize text for better matching in messy text. It converts text to
-lowercase, removes excess punctuation, replaces line breaks and dashes
-with spaces, and collapses multiple spaces into a single space. Text
-cleaning is applied only during matching and does not modify the
-original input data. Users can disable this behavior by setting
-`do_clean_text = FALSE`.
+standardize text for better matching in messy text for the user input
+data. It converts text words to lowercase, removes excess punctuation,
+replaces line breaks and dashes with spaces, and collapses multiple
+spaces into a single space. Text cleaning is applied only during
+matching and does not modify the original input data. Users can disable
+this behavior by setting `do_clean_text = FALSE`.
 
 ``` r
 text <- "  HELLO---WORLD  "
@@ -157,12 +157,13 @@ same text, multiple rows are returned, one per match.
 - **`cl`**: (default `NULL`) A cluster object or integer specifying
   child processes for parallel evaluation (ignored on Windows).
 
-## Filtering and Verification
+### Note on `token` method
 
-Matches are automatically filtered using a token verification check. The
-function identifies “significant” words (ignoring suffixes like “Inc” or
-“Corp”) and requires at least a 60% overlap between the input text and
-the corporations data entry to be considered a valid match.
+When this matching method is selected, matches are filtered using a
+token verification check. The algorithm identifies “significant” words
+(ignoring suffixes like “Inc” or “Corp”) and requires at least a 60%
+overlap between the input text and the corporations data entry to be
+considered a valid match.
 
 ### Returns
 

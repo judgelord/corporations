@@ -115,7 +115,7 @@
 <div class="section level2">
 <h2 id="text-cleaning">Text cleaning<a class="anchor" aria-label="anchor" href="#text-cleaning"></a>
 </h2>
-<p>Before matching, by default, <code>clean_text()</code> from the <a href="https://github.com/judgelord/regextable" class="external-link">regextable</a> is applied to standardize text for better matching in messy text. It converts text to lowercase, removes excess punctuation, replaces line breaks and dashes with spaces, and collapses multiple spaces into a single space. Text cleaning is applied only during matching and does not modify the original input data. Users can disable this behavior by setting <code>do_clean_text = FALSE</code>.</p>
+<p>Before matching, by default, <code>clean_text()</code> from the <a href="https://github.com/judgelord/regextable" class="external-link">regextable</a> is applied to standardize text for better matching in messy text for the user input data. It converts text words to lowercase, removes excess punctuation, replaces line breaks and dashes with spaces, and collapses multiple spaces into a single space. Text cleaning is applied only during matching and does not modify the original input data. Users can disable this behavior by setting <code>do_clean_text = FALSE</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">text</span> <span class="op">&lt;-</span> <span class="st">"  HELLO---WORLD  "</span></span>
 <span><span class="va">cleaned_text</span> <span class="op">&lt;-</span> <span class="fu">regextable</span><span class="fu">::</span><span class="fu"><a href="https://judgelord.github.io/regextable/reference/clean_text.html" class="external-link">clean_text</a></span><span class="op">(</span><span class="va">text</span><span class="op">)</span></span>
@@ -180,11 +180,11 @@
 <strong><code>cl</code></strong>: (default <code>NULL</code>) A cluster object or integer specifying child processes for parallel evaluation (ignored on Windows).</li>
 </ul>
 </div>
+<div class="section level3">
+<h3 id="note-on-token-method">Note on <code>token</code> method<a class="anchor" aria-label="anchor" href="#note-on-token-method"></a>
+</h3>
+<p>When this matching method is selected, matches are filtered using a token verification check. The algorithm identifies “significant” words (ignoring suffixes like “Inc” or “Corp”) and requires at least a 60% overlap between the input text and the corporations data entry to be considered a valid match.</p>
 </div>
-<div class="section level2">
-<h2 id="filtering-and-verification">Filtering and Verification<a class="anchor" aria-label="anchor" href="#filtering-and-verification"></a>
-</h2>
-<p>Matches are automatically filtered using a token verification check. The function identifies “significant” words (ignoring suffixes like “Inc” or “Corp”) and requires at least a 60% overlap between the input text and the corporations data entry to be considered a valid match.</p>
 <div class="section level3">
 <h3 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a>
 </h3>
