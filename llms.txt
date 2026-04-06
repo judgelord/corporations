@@ -83,12 +83,12 @@ head(corporations_data)
 
 Before matching, by default, `clean_text()` from the
 [regextable](https://github.com/judgelord/regextable) is applied to
-standardize text for better matching in messy text for the user input
-data. It converts text words to lowercase, removes excess punctuation,
-replaces line breaks and dashes with spaces, and collapses multiple
-spaces into a single space. Text cleaning is applied only during
-matching and does not modify the original input data. Users can disable
-this behavior by setting `do_clean_text = FALSE`.
+standardize text for better matching in messy text. It converts text to
+lowercase, removes excess punctuation, replaces line breaks and dashes
+with spaces, and collapses multiple spaces into a single space. Text
+cleaning is applied only during matching and does not modify the
+original input data. Users can disable this behavior by setting
+`do_clean_text = FALSE`.
 
 ``` r
 text <- "  HELLO---WORLD  "
