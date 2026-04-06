@@ -43,7 +43,7 @@ extract <- function(data,
     if (is.character(data)) data <- tibble::tibble(!!col_name := data)
 
     # Define a permanent directory on the user's machine for this package
-    model_dir <- tools::R_user_dir("YourPackageName", which = "data")
+    model_dir <- tools::R_user_dir("corporations", which = "data")
     if (!dir.exists(model_dir)) dir.create(model_dir, recursive = TRUE)
 
     model_path <- file.path(model_dir, "english-ewt.udpipe")
