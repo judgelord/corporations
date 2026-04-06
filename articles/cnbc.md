@@ -73,7 +73,6 @@ results <- corporations::extract(
   regex_return_cols = c("aliases", "cik", "ticker"),
   verbose = TRUE
  )
-#> Would you like to download the model now? (Yes/no/cancel)
 
 results %>% head() %>% print(width = Inf)
 #> # A tibble: 0 × 0
