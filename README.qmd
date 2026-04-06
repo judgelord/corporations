@@ -114,9 +114,10 @@ NOTE: When using mode = "search", the package will prompt you to download a ~15M
 -   **`unique_match`** (default `FALSE`) If `TRUE`, stops searching after first match to find at most one match per row.
 -   **`cl`**: (default `NULL`) A cluster object or integer specifying child processes for parallel evaluation (ignored on Windows).
 
-## Filtering and Verification
+### Note on `token` method
 
-Matches are automatically filtered using a token verification check. The function identifies "significant" words (ignoring suffixes like "Inc" or "Corp") and requires at least a 60% overlap between the input text and the corporations data entry to be considered a valid match.
+When this matching method is selected, matches are filtered using a token verification check. The algorithm identifies “significant” words (ignoring suffixes like “Inc” or “Corp”) and requires at least a 60% overlap between the input text and
+the corporations data entry to be considered a valid match.
 
 ### Returns
 
