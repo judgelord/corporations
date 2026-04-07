@@ -43,7 +43,10 @@ jobs:
           dir.create(model_dir, recursive = TRUE, showWarnings = FALSE)
           model_path <- file.path(model_dir, "english-ewt.udpipe")
           m_info <- udpipe::udpipe_download_model(language = "english", model_dir = model_dir)
+          cat("Downloaded to:", m_info$file_model, "\n")
           file.rename(m_info$file_model, model_path)
+          cat("Files in dir:", paste(list.files(model_dir), collapse = ", "), "\n")
+          cat("Expected file exists:", file.exists(model_path), "\n")
         shell: Rscript {0}
 
       - name: Build site
