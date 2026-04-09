@@ -31,5 +31,20 @@ NULL
 #' @name project_2025_coalition_and_contributors
 NULL
 
+#' house_hearing_excerpt dataset
+#'
+#' Sample text dataset used for demonstration of `corporations` and `search` mode extraction.
+#'
+#' An excerpt of text converted to a tibble from a 119 Congress hearing titled "Embedded Threats:
+#' Foreign Ownership, Hidden Hardware, and Licensing Failures in America’s Transportation Systems"
+#' @format A tibble with 1 column:
+#' \describe{
+#'   \item{text}{A column wiht each row containing a sentence from the excerpt}
+#' }
+#' @source \url{https://www.congress.gov/119/chrg/CHRG-119hhrg62658/CHRG-119hhrg62658.pdf}
+#' @docType data
+#' @name house_hearing_excerpt
+NULL
+
 
 

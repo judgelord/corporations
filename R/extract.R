@@ -50,7 +50,7 @@ extract <- function(data,
 
     if (!file.exists(model_path)) {
       # Ask the user for permission
-      message("This package requires a one-time download of a 20MB NLP model to your machine.")
+      message("This package requires a one-time download of a ~16MB NLP model to your machine.")
       ans <- askYesNo("Would you like to download the model now?")
 
       # 2. Check the answer
@@ -93,6 +93,9 @@ extract <- function(data,
 
     # Reconstruct 'data' to keep original columns/metadata
     data <- data[row_indices, , drop = FALSE]
+    # Keep the source sentence for context if matched.
+    # Will need to add source_text in extract() parameter to see the source text
+    data$source_text <- data[[col_name]]
     data[[col_name]] <- entities_agg$token
   }
 

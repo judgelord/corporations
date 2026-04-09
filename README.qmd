@@ -56,19 +56,6 @@ library(corporations)
 
 The built in crosswalk of corporations does not provide the full list of aliases that a corporation may have or a certain corporation may not be included at all. In order to help improve the amount of corporations that can match with user text, we ask that users feel free to visit our suggestion website and make suggestions for the crosswalk. This includes adding additional aliases to corporations or providing entirely new ones. Note: package maintainers will need to approve suggestions before adding it to the real database of companies, which may take some time. [corporations-website](https://github.com/stevenhanwen/corporations-website)
 
-## Data
-
-The examples below use an subset of the corporations_data crosswalk table of members of corporations and a example text data from the listed contributors in Project 2025's "Mandate for Leadership: The Conservative Promise". 
-
-```{r}
-data("project_2025_coalition_and_contributors")
-head(project_2025_coalition_and_contributors)
-
-# Temporarily using load() function because real crosswalk is not pushed to Github
-load("data-raw/corporations_data.rda")
-head(corporations_data)
-```
-
 ## Text cleaning
 
 Before matching, by default, `clean_text()` from the [regextable](https://github.com/judgelord/regextable) is applied to standardize text for better matching in messy text. It converts text to lowercase, removes excess punctuation, replaces line breaks and dashes with spaces, and collapses multiple spaces into a single space. Text cleaning is applied only during matching and does not modify the original input data. Users can disable this behavior by setting `do_clean_text = FALSE`.
@@ -78,13 +65,13 @@ text <- "  HELLO---WORLD  "
 cleaned_text <- regextable::clean_text(text)
 print(cleaned_text)
 ```
-## The function supports two methods of matching: 
+## `extract()` function supports two methods of matching: 
 
 1. `exact` (Default): One to one matching of corporation name strings between the input user data. 
 
 2. `token`: Token based matching with token scoring function that compares words of the string names.
 
-## The function supports two modes of operation:
+## `extract()` function supports two modes of operation:
 
 1. `match` (Default): Direct comparison. Best for short strings or lists of entities where you expect the text to be a company name.
 
@@ -92,10 +79,6 @@ print(cleaned_text)
 NOTE: When using mode = "search", the package will prompt you to download a ~15MB NLP model on its first run. This model allows the package to "read" the sentence structure.
 
 ## Extract regex-based matches from text
-
-### Description
-
-`extract()` performs regex-based matching on a text column using the corporations look-up table. All patterns that match each row are first filtered based on a token similarity scoring system. Then the matches that are confident are returned along with the corresponding pattern and optional metadata from the corporations table. If multiple patterns match the same text, multiple rows are returned, one per match.
 
 ### Required Parameters
 
@@ -131,9 +114,22 @@ A data frame with one row per match, including:
 - `match`: the substring matched in the text
 - `simililarity`: this is the similarity matching score if `token` method is selected based on Jaro-Winkler Similarity of the filtered results for ordering purposes
 
-### Basic Usage of `extract()`
+### Example data 1
 
-The simplest use of `extract()` with only the required arguments and specific return columns specified that demonstrate use cases. This finds all matches in the text column using the `corporations_data` and allows users to directly link company names with unique identifiers, determine which are publicly traded companies, and more. 
+This example is for a basic usage of `extract()`. Potential entities are already extracted to show matching with listed contributors in Project 2025's "Mandate for Leadership: The Conservative Promise". This shows one to one matching of corporations with names that are highly likely to be corporations, rather than semi-structured text. 
+
+```{r}
+data("project_2025_coalition_and_contributors")
+head(project_2025_coalition_and_contributors)
+
+# Temporarily using load() function because real crosswalk is not pushed to Github
+load("data-raw/corporations_data.rda")
+head(corporations_data)
+```
+
+### Basic usage of `extract()`
+
+The simplest use of `extract()` with only the required arguments and specific return columns specified that demonstrate use cases. This finds all matches in the text column using the `corporations_data` and allows users to directly link company names with unique identifiers, determine which are publicly traded companies, and more. If multiple patterns match the same text, multiple rows are returned, one per match.
 
 ```{r}
 # Extract patterns using only required arguments and the default mode = "match"
@@ -147,7 +143,35 @@ result <- corporations::extract(
 result
 ```
 
-## Filtering Corporations
+### Example data 2
+
+For this `search` mode example, we extract sentences from an excerpt of a house hearing (01/21/2026) named “Embedded Threats: Foreign Ownership, Hidden Hardware, and Licensing Failures in America’s Transportation Systems.” [Full transcript link](https://www.congress.gov/event/119th-congress/house-event/118875/text). This data has been pre-processed with each sentence as a row inside the house_hearing_excerpt tibble. 
+
+```{r}
+data("house_hearing_excerpt")
+head(house_hearing_excerpt)
+```
+
+### `search` mode usage of `extract()`
+
+For `search` mode, you may add `source_text` as a column inside the `data_return_cols` parameter to view the full text in which the entity was extracted from. 
+
+```{r}
+# Extract patterns using only required arguments and the default mode = "match"
+result <- corporations::extract(
+  data = house_hearing_excerpt,
+  col_name = "text",
+  mode = "search",
+  data_return_cols = c("text"),
+  regex_return_cols = c("aliases", "cik", "ticker", "naics")
+)
+
+result
+```
+
+Note: Notice that there are false positive matches due to corporations in the crosswalk that have names of the countries mentioned inside the text data. Potential fixes of this might include gathering contextual data of sentences during future development. 
+
+## Filtering corporations
 
 The `corporations` package enables exploration of the corporations crosswalk by limiting your search to specific types of entities (e.g., only publicly traded companies or specific industries). The `filter()` function allows you to subset the internal crosswalk to specific companies. 
 
@@ -163,7 +187,7 @@ programming_services_public <- filter(naics_codes = c(541511), public_only = TRU
 head(programming_services_public)
 ```
 
-## Reporting Matching Issues
+## Reporting matching issues
 
 The `report_fix()` function allows users to flag incorrect name matches or suggest missing aliases through a GitHub issue that is automatically formatted and prompts the user for questions regarding the report. However, we highly suggest to do this kind of suggestion on the [corporations-website](https://github.com/stevenhanwen/corporations-website) for a more smoother experience. In addition, you will need a GitHub account to use this reporting method. 
 
