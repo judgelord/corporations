@@ -49,36 +49,6 @@ ones. Note: package maintainers will need to approve suggestions before
 adding it to the real database of companies, which may take some time.
 [corporations-website](https://github.com/stevenhanwen/corporations-website)
 
-## Data
-
-The examples below use an subset of the corporations_data crosswalk
-table of members of corporations and a example text data from the listed
-contributors in Project 2025’s “Mandate for Leadership: The Conservative
-Promise”.
-
-``` r
-data("project_2025_coalition_and_contributors")
-head(project_2025_coalition_and_contributors)
-#>           type                        organization individual                  role
-#> 1 Organization            Alabama Policy Institute            Advisory Board Member
-#> 2 Organization          Alliance Defending Freedom            Advisory Board Member
-#> 3 Organization  American Accountability Foundation            Advisory Board Member
-#> 4 Organization American Center for Law and Justice            Advisory Board Member
-#> 5 Organization                    American Compass            Advisory Board Member
-#> 6 Organization           The American Conservative            Advisory Board Member
-
-# Temporarily using load() function because real crosswalk is not pushed to Github
-load("data-raw/corporations_data.rda")
-head(corporations_data)
-#>                                                      aliases cik FED_RSSD ticker naics
-#> 1   Defined Asset Funds Municipal Invt Tr Fd New York Ser 33   3       NA           NA
-#> 2      Corporate Income Fund Seventy Ninth Short Term Series  13       NA           NA
-#> 3  Defined Asset Funds Municipal Invt Tr Fd Mon Pymt Ser 155  14       NA           NA
-#> 4  Defined Asset Funds Municipal Invt Tr Fd Mon Pymt Ser 156  17       NA           NA
-#> 5 Nuveen Tax Exempt Unit Trust Series 169 National Trust 169  18       NA           NA
-#> 6                                   K Tron International Inc  20       NA   KTII    NA
-```
-
 ## Text cleaning
 
 Before matching, by default, `clean_text()` from the
@@ -97,7 +67,7 @@ print(cleaned_text)
 #> [1] "hello world"
 ```
 
-## The function supports two methods of matching:
+## `extract()` function supports two methods of matching:
 
 1.  `exact` (Default): One to one matching of corporation name strings
     between the input user data.
@@ -105,7 +75,7 @@ print(cleaned_text)
 2.  `token`: Token based matching with token scoring function that
     compares words of the string names.
 
-## The function supports two modes of operation:
+## `extract()` function supports two modes of operation:
 
 1.  `match` (Default): Direct comparison. Best for short strings or
     lists of entities where you expect the text to be a company name.
@@ -117,16 +87,6 @@ print(cleaned_text)
     run. This model allows the package to “read” the sentence structure.
 
 ## Extract regex-based matches from text
-
-### Description
-
-[`extract()`](https://judgelord.github.io/corporations/reference/extract.md)
-performs regex-based matching on a text column using the corporations
-look-up table. All patterns that match each row are first filtered based
-on a token similarity scoring system. Then the matches that are
-confident are returned along with the corresponding pattern and optional
-metadata from the corporations table. If multiple patterns match the
-same text, multiple rows are returned, one per match.
 
 ### Required Parameters
 
@@ -180,7 +140,39 @@ A data frame with one row per match, including:
   method is selected based on Jaro-Winkler Similarity of the filtered
   results for ordering purposes
 
-### Basic Usage of `extract()`
+### Example data 1
+
+This example is for a basic usage of
+[`extract()`](https://judgelord.github.io/corporations/reference/extract.md).
+Potential entities are already extracted to show matching with listed
+contributors in Project 2025’s “Mandate for Leadership: The Conservative
+Promise”. This shows one to one matching of corporations with names that
+are highly likely to be corporations, rather than semi-structured text.
+
+``` r
+data("project_2025_coalition_and_contributors")
+head(project_2025_coalition_and_contributors)
+#>           type                        organization individual                  role
+#> 1 Organization            Alabama Policy Institute            Advisory Board Member
+#> 2 Organization          Alliance Defending Freedom            Advisory Board Member
+#> 3 Organization  American Accountability Foundation            Advisory Board Member
+#> 4 Organization American Center for Law and Justice            Advisory Board Member
+#> 5 Organization                    American Compass            Advisory Board Member
+#> 6 Organization           The American Conservative            Advisory Board Member
+
+# Temporarily using load() function because real crosswalk is not pushed to Github
+load("data-raw/corporations_data.rda")
+head(corporations_data)
+#>                                                      aliases cik FED_RSSD ticker naics
+#> 1   Defined Asset Funds Municipal Invt Tr Fd New York Ser 33   3       NA           NA
+#> 2      Corporate Income Fund Seventy Ninth Short Term Series  13       NA           NA
+#> 3  Defined Asset Funds Municipal Invt Tr Fd Mon Pymt Ser 155  14       NA           NA
+#> 4  Defined Asset Funds Municipal Invt Tr Fd Mon Pymt Ser 156  17       NA           NA
+#> 5 Nuveen Tax Exempt Unit Trust Series 169 National Trust 169  18       NA           NA
+#> 6                                   K Tron International Inc  20       NA   KTII    NA
+```
+
+### Basic usage of `extract()`
 
 The simplest use of
 [`extract()`](https://judgelord.github.io/corporations/reference/extract.md)
@@ -188,7 +180,8 @@ with only the required arguments and specific return columns specified
 that demonstrate use cases. This finds all matches in the text column
 using the `corporations_data` and allows users to directly link company
 names with unique identifiers, determine which are publicly traded
-companies, and more.
+companies, and more. If multiple patterns match the same text, multiple
+rows are returned, one per match.
 
 ``` r
 # Extract patterns using only required arguments and the default mode = "match"
@@ -212,7 +205,77 @@ result
 #> 7     83 Baker Botts, LLP                1127752 ""         NA "\\b(?:baker botts)\\b"                             Bake…
 ```
 
-## Filtering Corporations
+### Example data 2
+
+For this `search` mode example, we extract sentences from an excerpt of
+a house hearing (01/21/2026) named “Embedded Threats: Foreign Ownership,
+Hidden Hardware, and Licensing Failures in America’s Transportation
+Systems.” [Full transcript
+link](https://www.congress.gov/event/119th-congress/house-event/118875/text).
+This data has been pre-processed with each sentence as a row inside the
+house_hearing_excerpt tibble.
+
+``` r
+data("house_hearing_excerpt")
+head(house_hearing_excerpt)
+#> # A tibble: 6 × 1
+#>   text                                                                                                                 
+#>   <chr>                                                                                                                
+#> 1 China controls 90 percent of the world’s LiDAR market.                                                               
+#> 2 The Chi- nese entities that are leading this charge are companies like Hesai, RoboSense, DJI that the U.S.           
+#> 3 Government has already identified as tied to the Chinese military.                                                   
+#> 4 Those Chinese military-tied companies sell to GM’s Cruise and Nvidia’s Drive Hyperion.                               
+#> 5 Their LiDAR sen- sors have been installed at JFK International Airport and Char- lotte Douglas International Airport.
+#> 6 Chinese LiDAR sensors are on intersections in Chattanooga and on drawbridges in Sarasota.
+```
+
+### `search` mode usage of `extract()`
+
+For `search` mode, you may add `source_text` as a column inside the
+`data_return_cols` parameter to view the full text in which the entity
+was extracted from.
+
+``` r
+# Extract patterns using only required arguments and the default mode = "match"
+result <- corporations::extract(
+  data = house_hearing_excerpt,
+  col_name = "text",
+  mode = "search",
+  data_return_cols = c("text"),
+  regex_return_cols = c("aliases", "cik", "ticker", "naics")
+)
+
+result
+#> # A tibble: 19 × 8
+#>    row_id text       aliases                        cik ticker  naics pattern                        match     
+#>     <int> <chr>      <chr>                        <dbl> <chr>   <dbl> <chr>                          <chr>     
+#>  1      1 China      China Inc                  1494562 ""         NA "\\b(?:china)\\b"              China     
+#>  2      2 Chi        Carnival Homes Inc|Chi Inc 1092155 ""         NA "\\b(?:carnival homes|chi)\\b" Chi       
+#>  3      8 Nvidia     Nvidia Corp/Ca|Nvidia Corp 1045810 "NVDA" 334413 "\\b(?:nvidia/ca|nvidia)\\b"   Nvidia    
+#>  4     18 China      China Inc                  1494562 ""         NA "\\b(?:china)\\b"              China     
+#>  5     21 China      China Inc                  1494562 ""         NA "\\b(?:china)\\b"              China     
+#>  6     22 Bei        Bei                        1360658 ""         NA "\\b(?:bei)\\b"                Bei       
+#>  7     22 Bei        B.I. Inc                   1517758 ""         NA "\\b(?:b.i)\\b"                Bei       
+#>  8     24 Washington Washington Corp             314625 ""         NA "\\b(?:washington)\\b"         Washington
+#>  9     25 Washington Washington Corp             314625 ""         NA "\\b(?:washington)\\b"         Washington
+#> 10     27 Washington Washington Corp             314625 ""         NA "\\b(?:washington)\\b"         Washington
+#> 11     28 China      China Inc                  1494562 ""         NA "\\b(?:china)\\b"              China     
+#> 12     31 China      China Inc                  1494562 ""         NA "\\b(?:china)\\b"              China     
+#> 13     33 Washington Washington Corp             314625 ""         NA "\\b(?:washington)\\b"         Washington
+#> 14     35 China      China Inc                  1494562 ""         NA "\\b(?:china)\\b"              China     
+#> 15     37 China      China Inc                  1494562 ""         NA "\\b(?:china)\\b"              China     
+#> 16     38 FedEx      Fdx Corp|Fedex Corp        1048911 "FDX"  492110 "\\b(?:fdx|fedex)\\b"          FedEx     
+#> 17     39 Boeing     Boeing Co                    12927 "BA"   336411 "\\b(?:boeing)\\b"             Boeing    
+#> 18     41 China      China Inc                  1494562 ""         NA "\\b(?:china)\\b"              China     
+#> 19     42 Washington Washington Corp             314625 ""         NA "\\b(?:washington)\\b"         Washington
+```
+
+Note: Notice that there are false positive matches due to corporations
+in the crosswalk that have names of the countries mentioned inside the
+text data. Potential fixes of this might include gathering contextual
+data of sentences during future development.
+
+## Filtering corporations
 
 The `corporations` package enables exploration of the corporations
 crosswalk by limiting your search to specific types of entities (e.g.,
@@ -247,7 +310,7 @@ head(programming_services_public)
 #> 745780       Infosys Ltd|Infosys Technologies Ltd 1067491       NA   INFY 541511
 ```
 
-## Reporting Matching Issues
+## Reporting matching issues
 
 The
 [`report_fix()`](https://judgelord.github.io/corporations/reference/report_fix.md)
@@ -277,6 +340,8 @@ account to use this reporting method.
   : Extract corporate name matches from text
 - [`filter()`](https://judgelord.github.io/corporations/reference/filter.md)
   : Subset corporations based on user filters
+- [`house_hearing_excerpt`](https://judgelord.github.io/corporations/reference/house_hearing_excerpt.md)
+  : house_hearing_excerpt dataset
 - [`project_2025_coalition_and_contributors`](https://judgelord.github.io/corporations/reference/project_2025_coalition_and_contributors.md)
   : project_2025_coalition_and_contributors dataset
 - [`report_fix()`](https://judgelord.github.io/corporations/reference/report_fix.md)
