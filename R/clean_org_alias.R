@@ -16,6 +16,7 @@ clean_org_alias <- function(x) {
   x <- gsub("[[:punct:]]+$", "", x)
   x <- trimws(x)
   x <- gsub("\\s+", " ", x)
+  x <- gsub("\\.", "", x)
 
   return(x)
 }
