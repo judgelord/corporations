@@ -261,15 +261,14 @@
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">result</span></span>
-<span><span class="co">#&gt; # A tibble: 6 × 8</span></span>
+<span><span class="co">#&gt; # A tibble: 5 × 8</span></span>
 <span><span class="co">#&gt;   row_id text   aliases                        cik ticker  naics pattern                        match </span></span>
 <span><span class="co">#&gt;    &lt;int&gt; &lt;chr&gt;  &lt;chr&gt;                        &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;                          &lt;chr&gt; </span></span>
 <span><span class="co">#&gt; 1      1 Chi    Carnival Homes Inc|Chi Inc 1092155 ""         NA "\\b(?:carnival homes|chi)\\b" Chi   </span></span>
 <span><span class="co">#&gt; 2      7 Nvidia Nvidia Corp/Ca|Nvidia Corp 1045810 "NVDA" 334413 "\\b(?:nvidia/ca|nvidia)\\b"   Nvidia</span></span>
 <span><span class="co">#&gt; 3     15 Bei    Bei                        1360658 ""         NA "\\b(?:bei)\\b"                Bei   </span></span>
-<span><span class="co">#&gt; 4     15 Bei    B.I. Inc                   1517758 ""         NA "\\b(?:b.i)\\b"                Bei   </span></span>
-<span><span class="co">#&gt; 5     23 FedEx  Fdx Corp|Fedex Corp        1048911 "FDX"  492110 "\\b(?:fdx|fedex)\\b"          FedEx </span></span>
-<span><span class="co">#&gt; 6     24 Boeing Boeing Co                    12927 "BA"   336411 "\\b(?:boeing)\\b"             Boeing</span></span></code></pre></div>
+<span><span class="co">#&gt; 4     23 FedEx  Fdx Corp|Fedex Corp        1048911 "FDX"  492110 "\\b(?:fdx|fedex)\\b"          FedEx </span></span>
+<span><span class="co">#&gt; 5     24 Boeing Boeing Co                    12927 "BA"   336411 "\\b(?:boeing)\\b"             Boeing</span></span></code></pre></div>
 <p>Note: Notice that there are false positive matches due to corporations in the crosswalk that have names of the countries mentioned inside the text data. Potential fixes of this might include gathering contextual data of sentences during future development.</p>
 </div>
 </div>

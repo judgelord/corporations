@@ -246,15 +246,14 @@ result <- corporations::extract(
 )
 
 result
-#> # A tibble: 6 × 8
+#> # A tibble: 5 × 8
 #>   row_id text   aliases                        cik ticker  naics pattern                        match 
 #>    <int> <chr>  <chr>                        <dbl> <chr>   <dbl> <chr>                          <chr> 
 #> 1      1 Chi    Carnival Homes Inc|Chi Inc 1092155 ""         NA "\\b(?:carnival homes|chi)\\b" Chi   
 #> 2      7 Nvidia Nvidia Corp/Ca|Nvidia Corp 1045810 "NVDA" 334413 "\\b(?:nvidia/ca|nvidia)\\b"   Nvidia
 #> 3     15 Bei    Bei                        1360658 ""         NA "\\b(?:bei)\\b"                Bei   
-#> 4     15 Bei    B.I. Inc                   1517758 ""         NA "\\b(?:b.i)\\b"                Bei   
-#> 5     23 FedEx  Fdx Corp|Fedex Corp        1048911 "FDX"  492110 "\\b(?:fdx|fedex)\\b"          FedEx 
-#> 6     24 Boeing Boeing Co                    12927 "BA"   336411 "\\b(?:boeing)\\b"             Boeing
+#> 4     23 FedEx  Fdx Corp|Fedex Corp        1048911 "FDX"  492110 "\\b(?:fdx|fedex)\\b"          FedEx 
+#> 5     24 Boeing Boeing Co                    12927 "BA"   336411 "\\b(?:boeing)\\b"             Boeing
 ```
 
 Note: Notice that there are false positive matches due to corporations
