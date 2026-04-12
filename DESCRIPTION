@@ -20,7 +20,8 @@ Imports:
     regextable,
     stringdist,
     stringr,
-    udpipe
+    udpipe,
+    maps
 Remotes: 
     judgelord/regextable
 URL: https://github.com/judgelord/corporations

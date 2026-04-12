@@ -88,6 +88,15 @@ extract <- function(data,
     # Update 'data' dataframe from extracted entities
     entities_agg <- aggregate(token ~ doc_id + group, data = entities, paste, collapse = " ")
 
+    # Remove geographic names (countries, cities, states)
+    countries <- tolower(unique(maps::world.cities$country.etc))
+    cities <- tolower(unique(maps::world.cities$name))
+    states <- tolower(state.name)
+    locations <- unique(c(countries, cities, states))
+    entities_agg <- entities_agg[!tolower(entities_agg$token) %in% locations, ]
+
+    if (nrow(entities_agg) == 0) return(tibble::tibble())
+
     # Convert doc_id (e.g., "doc1") to row index (1)
     row_indices <- as.integer(gsub("doc", "", entities_agg$doc_id))
 
