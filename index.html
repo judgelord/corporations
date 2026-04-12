@@ -269,7 +269,7 @@
 <span><span class="co">#&gt; 3     15 Bei    Bei                        1360658 ""         NA "\\b(?:bei)\\b"                Bei   </span></span>
 <span><span class="co">#&gt; 4     23 FedEx  Fdx Corp|Fedex Corp        1048911 "FDX"  492110 "\\b(?:fdx|fedex)\\b"          FedEx </span></span>
 <span><span class="co">#&gt; 5     24 Boeing Boeing Co                    12927 "BA"   336411 "\\b(?:boeing)\\b"             Boeing</span></span></code></pre></div>
-<p>Note: Notice that there are false positive matches due to corporations in the crosswalk that have names of the countries mentioned inside the text data. Potential fixes of this might include gathering contextual data of sentences during future development.</p>
+<p>Note: Notice that there are false positive matches due to corporations in the crosswalk that have names of the countries mentioned inside the text data because they were cut off (“Chi” is from “Chi-nese” and “Bei” is from “Bei-jing”). This would need to be addressed by making sure that hyphenated words due to end of lines are handled before input data is used.</p>
 </div>
 </div>
 <div class="section level2">

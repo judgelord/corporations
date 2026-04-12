@@ -258,8 +258,10 @@ result
 
 Note: Notice that there are false positive matches due to corporations
 in the crosswalk that have names of the countries mentioned inside the
-text data. Potential fixes of this might include gathering contextual
-data of sentences during future development.
+text data because they were cut off (“Chi” is from “Chi-nese” and “Bei”
+is from “Bei-jing”). This would need to be addressed by making sure that
+hyphenated words due to end of lines are handled before input data is
+used.
 
 ## Filtering corporations
 
