@@ -233,7 +233,9 @@ head(house_hearing_excerpt)
 
 For `search` mode, you may add `source_text` as a column inside the
 `data_return_cols` parameter to view the full text in which the entity
-was extracted from.
+was extracted from. This only works as expected if the input data is
+pre-processed as a tibble with multiple rows. Otherwise, it will return
+the entire text data.
 
 ``` r
 # Extract patterns using only required arguments and the default mode = "match"

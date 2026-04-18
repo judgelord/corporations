@@ -249,7 +249,7 @@
 <code>search</code> mode usage of <code>extract()</code>
 <a class="anchor" aria-label="anchor" href="#search-mode-usage-of-extract"></a>
 </h3>
-<p>For <code>search</code> mode, you may add <code>source_text</code> as a column inside the <code>data_return_cols</code> parameter to view the full text in which the entity was extracted from.</p>
+<p>For <code>search</code> mode, you may add <code>source_text</code> as a column inside the <code>data_return_cols</code> parameter to view the full text in which the entity was extracted from. This only works as expected if the input data is pre-processed as a tibble with multiple rows. Otherwise, it will return the entire text data.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Extract patterns using only required arguments and the default mode = "match"</span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu">corporations</span><span class="fu">::</span><span class="fu"><a href="reference/extract.html">extract</a></span><span class="op">(</span></span>
