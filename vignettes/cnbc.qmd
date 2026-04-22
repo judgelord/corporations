@@ -65,7 +65,7 @@ results <- corporations::extract(
   verbose = TRUE
  )
 
-results %>% head() %>% print(width = Inf)
+results
 ```
 
 
