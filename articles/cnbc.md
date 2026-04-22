@@ -74,22 +74,16 @@ results <- corporations::extract(
   verbose = TRUE
  )
 
-results %>% head() %>% print(width = Inf)
-#> # A tibble: 6 × 7
-#>   row_id headline aliases                                      cik ticker 
-#>    <int> <chr>    <chr>                                      <dbl> <chr>  
-#> 1      5 Science  Science Corp                             1873836 ""     
-#> 2      5 Science  Science Inc                               828325 ""     
-#> 3      7 CDC      Cdc Corp|China Com Corp|Chinadotcom Corp 1076770 "CDCAQ"
-#> 4      7 CDC      Cdc Corp                                 1395500 ""     
-#> 5      9 Science  Science Corp                             1873836 ""     
-#> 6      9 Science  Science Inc                               828325 ""     
-#>   pattern                               match  
-#>   <chr>                                 <chr>  
-#> 1 "\\b(?:science)\\b"                   Science
-#> 2 "\\b(?:science)\\b"                   Science
-#> 3 "\\b(?:cdc|china com|chinadotcom)\\b" CDC    
-#> 4 "\\b(?:cdc)\\b"                       CDC    
-#> 5 "\\b(?:science)\\b"                   Science
-#> 6 "\\b(?:science)\\b"                   Science
+results
+#> # A tibble: 8 × 7
+#>   row_id headline      aliases                          cik ticker pattern match
+#>    <int> <chr>         <chr>                          <dbl> <chr>  <chr>   <chr>
+#> 1      5 Science       Science Corp                  1.87e6 ""     "\\b(?… Scie…
+#> 2      5 Science       Science Inc                   8.28e5 ""     "\\b(?… Scie…
+#> 3      7 CDC           Cdc Corp|China Com Corp|Chin… 1.08e6 "CDCA… "\\b(?… CDC  
+#> 4      7 CDC           Cdc Corp                      1.40e6 ""     "\\b(?… CDC  
+#> 5      9 Science       Science Corp                  1.87e6 ""     "\\b(?… Scie…
+#> 6      9 Science       Science Inc                   8.28e5 ""     "\\b(?… Scie…
+#> 7     15 PepsiCo       Pepsico Inc                   7.75e4 "PEP"  "\\b(?… Peps…
+#> 8     18 Goldman Sachs Goldman Sachs & Co Et Al|Gol… 7.70e5 ""     "\\b(?… Gold…
 ```

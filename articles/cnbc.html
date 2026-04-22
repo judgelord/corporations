@@ -140,24 +140,18 @@
 <span>  verbose <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span> <span class="op">)</span></span>
 <span></span>
-<span><span class="va">results</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>width <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 6 × 7</span></span>
-<span><span class="co">#&gt;   row_id headline aliases                                      cik ticker </span></span>
-<span><span class="co">#&gt;    &lt;int&gt; &lt;chr&gt;    &lt;chr&gt;                                      &lt;dbl&gt; &lt;chr&gt;  </span></span>
-<span><span class="co">#&gt; 1      5 Science  Science Corp                             1873836 ""     </span></span>
-<span><span class="co">#&gt; 2      5 Science  Science Inc                               828325 ""     </span></span>
-<span><span class="co">#&gt; 3      7 CDC      Cdc Corp|China Com Corp|Chinadotcom Corp 1076770 "CDCAQ"</span></span>
-<span><span class="co">#&gt; 4      7 CDC      Cdc Corp                                 1395500 ""     </span></span>
-<span><span class="co">#&gt; 5      9 Science  Science Corp                             1873836 ""     </span></span>
-<span><span class="co">#&gt; 6      9 Science  Science Inc                               828325 ""     </span></span>
-<span><span class="co">#&gt;   pattern                               match  </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;                                 &lt;chr&gt;  </span></span>
-<span><span class="co">#&gt; 1 "\\b(?:science)\\b"                   Science</span></span>
-<span><span class="co">#&gt; 2 "\\b(?:science)\\b"                   Science</span></span>
-<span><span class="co">#&gt; 3 "\\b(?:cdc|china com|chinadotcom)\\b" CDC    </span></span>
-<span><span class="co">#&gt; 4 "\\b(?:cdc)\\b"                       CDC    </span></span>
-<span><span class="co">#&gt; 5 "\\b(?:science)\\b"                   Science</span></span>
-<span><span class="co">#&gt; 6 "\\b(?:science)\\b"                   Science</span></span></code></pre></div>
+<span><span class="va">results</span></span>
+<span><span class="co">#&gt; # A tibble: 8 × 7</span></span>
+<span><span class="co">#&gt;   row_id headline      aliases                          cik ticker pattern match</span></span>
+<span><span class="co">#&gt;    &lt;int&gt; &lt;chr&gt;         &lt;chr&gt;                          &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;</span></span>
+<span><span class="co">#&gt; 1      5 Science       Science Corp                  1.87e6 ""     "\\b(?… Scie…</span></span>
+<span><span class="co">#&gt; 2      5 Science       Science Inc                   8.28e5 ""     "\\b(?… Scie…</span></span>
+<span><span class="co">#&gt; 3      7 CDC           Cdc Corp|China Com Corp|Chin… 1.08e6 "CDCA… "\\b(?… CDC  </span></span>
+<span><span class="co">#&gt; 4      7 CDC           Cdc Corp                      1.40e6 ""     "\\b(?… CDC  </span></span>
+<span><span class="co">#&gt; 5      9 Science       Science Corp                  1.87e6 ""     "\\b(?… Scie…</span></span>
+<span><span class="co">#&gt; 6      9 Science       Science Inc                   8.28e5 ""     "\\b(?… Scie…</span></span>
+<span><span class="co">#&gt; 7     15 PepsiCo       Pepsico Inc                   7.75e4 "PEP"  "\\b(?… Peps…</span></span>
+<span><span class="co">#&gt; 8     18 Goldman Sachs Goldman Sachs &amp; Co Et Al|Gol… 7.70e5 ""     "\\b(?… Gold…</span></span></code></pre></div>
 </div>
 </section></section><script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
