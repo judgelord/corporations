@@ -26,37 +26,37 @@ cnbc <- html_text(links)
 
 cnbc <- cnbc[160:190]
 cnbc
-#>  [1] "Restaurants"                                                                                                 
-#>  [2] "Starbucks launches beta app in ChatGPT to fuel new drink discovery"                                          
-#>  [3] "Airlines"                                                                                                    
-#>  [4] "United CEO had been considering a merger last fall, months before bringing it up to the Trump administration"
-#>  [5] "Finance"                                                                                                     
-#>  [6] "Morgan Stanley tops estimates as trading revenue beats by nearly $1 billion "                                
-#>  [7] ""                                                                                                            
-#>  [8] "Food & Beverage"                                                                                             
-#>  [9] "Nearly 60% of U.S. farmers say their finances are getting worse: Survey"                                     
-#> [10] ""                                                                                                            
-#> [11] "Finance"                                                                                                     
-#> [12] "Bank of America tops estimates, CEO Moynihan says consumer banking is 'healthy'"                             
-#> [13] ""                                                                                                            
-#> [14] "Retail"                                                                                                      
-#> [15] "Walmart is refreshing the look of Great Value, its largest private-label brand"                              
-#> [16] "Finance"                                                                                                     
-#> [17] "Dimon says Anthropic's Mythos reveals 'more vulnerabilities' for cyberattacks"                               
-#> [18] "Airlines"                                                                                                    
-#> [19] "What a United-American merger would mean, from antitrust hurdles to airfare"                                 
-#> [20] "Autos"                                                                                                       
-#> [21] "Lucid names auto industry outsider as CEO, expands Uber deal"                                                
-#> [22] ""                                                                                                            
-#> [23] "Finance"                                                                                                     
-#> [24] "JPMorgan tops estimates on Wall Street results, Dimon warns of 'complex' risks"                              
-#> [25] ""                                                                                                            
-#> [26] "Finance"                                                                                                     
-#> [27] "Citigroup beats estimates, boosted by gains in fixed income "                                                
-#> [28] ""                                                                                                            
-#> [29] "Inside Alts"                                                                                                 
-#> [30] "Blackstone’s Solotar: Investors should separate private credit ‘signal from the noise’"                      
-#> [31] "Media"
+#>  [1] "Food & Beverage"                                                               
+#>  [2] "Some grocers are using AI to cut food waste and boost profit margins"          
+#>  [3] "Media"                                                                         
+#>  [4] "Netflix reiterates guidance, says Reed Hastings to exit board"                 
+#>  [5] "Health and Science"                                                            
+#>  [6] "Trump nominates Erica Schwartz as CDC director"                                
+#>  [7] ""                                                                              
+#>  [8] "Health and Science"                                                            
+#>  [9] "RFK Jr.'s peptide policy could boost Hims & Hers as its GLP-1 business evolves"
+#> [10] ""                                                                              
+#> [11] "Airlines"                                                                      
+#> [12] "Airline CEOs urged by lawmaker to lower fares if fuel prices come down"        
+#> [13] ""                                                                              
+#> [14] "Inside Wealth"                                                                 
+#> [15] "How the wealthy are planning to cut their 2026 tax bills"                      
+#> [16] "Autos"                                                                         
+#> [17] "Why foreign automakers dominate the sedan market"                              
+#> [18] "Restaurants"                                                                   
+#> [19] "PepsiCo earnings beat estimates as Doritos, Lay's price cuts win back shoppers"
+#> [20] "Airlines"                                                                      
+#> [21] "Spirit Airlines could liquidate as early as this week, sources say"            
+#> [22] ""                                                                              
+#> [23] "Finance"                                                                       
+#> [24] "Goldman Sachs bond traders stumbled as Wall Street rivals thrived"             
+#> [25] ""                                                                              
+#> [26] "Autos"                                                                         
+#> [27] "Ford EV chief leaving automaker amid new restructuring efforts"                
+#> [28] ""                                                                              
+#> [29] "Travel"                                                                        
+#> [30] "For cruise lines, Iran conflict and oil prices threaten to dent profits"       
+#> [31] "Restaurants"
 ```
 
 ``` r
@@ -75,5 +75,21 @@ results <- corporations::extract(
  )
 
 results %>% head() %>% print(width = Inf)
-#> # A tibble: 0 × 0
+#> # A tibble: 6 × 7
+#>   row_id headline aliases                                      cik ticker 
+#>    <int> <chr>    <chr>                                      <dbl> <chr>  
+#> 1      5 Science  Science Corp                             1873836 ""     
+#> 2      5 Science  Science Inc                               828325 ""     
+#> 3      7 CDC      Cdc Corp|China Com Corp|Chinadotcom Corp 1076770 "CDCAQ"
+#> 4      7 CDC      Cdc Corp                                 1395500 ""     
+#> 5      9 Science  Science Corp                             1873836 ""     
+#> 6      9 Science  Science Inc                               828325 ""     
+#>   pattern                               match  
+#>   <chr>                                 <chr>  
+#> 1 "\\b(?:science)\\b"                   Science
+#> 2 "\\b(?:science)\\b"                   Science
+#> 3 "\\b(?:cdc|china com|chinadotcom)\\b" CDC    
+#> 4 "\\b(?:cdc)\\b"                       CDC    
+#> 5 "\\b(?:science)\\b"                   Science
+#> 6 "\\b(?:science)\\b"                   Science
 ```
