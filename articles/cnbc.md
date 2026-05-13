@@ -5,12 +5,14 @@
 ### load packages
 
 ``` r
+
 library(corporations)
 ```
 
 This vignette also uses `rvest`.
 
 ``` r
+
 library(rvest) # for web scraping 
 ```
 
@@ -19,6 +21,7 @@ library(rvest) # for web scraping
 Using `rvest` we scrape the cnbc.com and get all linked stories.
 
 ``` r
+
 html <- read_html("https://www.cnbc.com/business/") # The CNBC Business page
 links <- html_nodes(html, "a") # "a" nodes are linked text
 
@@ -26,40 +29,41 @@ cnbc <- html_text(links)
 
 cnbc <- cnbc[160:190]
 cnbc
-#>  [1] "Food & Beverage"                                                               
-#>  [2] "Some grocers are using AI to cut food waste and boost profit margins"          
-#>  [3] "Media"                                                                         
-#>  [4] "Netflix reiterates guidance, says Reed Hastings to exit board"                 
-#>  [5] "Health and Science"                                                            
-#>  [6] "Trump nominates Erica Schwartz as CDC director"                                
-#>  [7] ""                                                                              
-#>  [8] "Health and Science"                                                            
-#>  [9] "RFK Jr.'s peptide policy could boost Hims & Hers as its GLP-1 business evolves"
-#> [10] ""                                                                              
-#> [11] "Airlines"                                                                      
-#> [12] "Airline CEOs urged by lawmaker to lower fares if fuel prices come down"        
-#> [13] ""                                                                              
-#> [14] "Inside Wealth"                                                                 
-#> [15] "How the wealthy are planning to cut their 2026 tax bills"                      
-#> [16] "Autos"                                                                         
-#> [17] "Why foreign automakers dominate the sedan market"                              
-#> [18] "Restaurants"                                                                   
-#> [19] "PepsiCo earnings beat estimates as Doritos, Lay's price cuts win back shoppers"
-#> [20] "Airlines"                                                                      
-#> [21] "Spirit Airlines could liquidate as early as this week, sources say"            
-#> [22] ""                                                                              
-#> [23] "Finance"                                                                       
-#> [24] "Goldman Sachs bond traders stumbled as Wall Street rivals thrived"             
-#> [25] ""                                                                              
-#> [26] "Autos"                                                                         
-#> [27] "Ford EV chief leaving automaker amid new restructuring efforts"                
-#> [28] ""                                                                              
-#> [29] "Travel"                                                                        
-#> [30] "For cruise lines, Iran conflict and oil prices threaten to dent profits"       
-#> [31] "Restaurants"
+#>  [1] "Advertising"                                                                      
+#>  [2] "At TV upfronts, AI is in and corporate shuffles are reshaping the lineup"         
+#>  [3] "Retail"                                                                           
+#>  [4] "Target is trying to win back busy families, starting with the baby aisle"         
+#>  [5] "Media"                                                                            
+#>  [6] "Meet the YouTube advisors behind MrBeast and other million-dollar channels"       
+#>  [7] ""                                                                                 
+#>  [8] "Autos"                                                                            
+#>  [9] "Why one of the largest U.S. auto lenders isn't worried about 'forever loans'"     
+#> [10] ""                                                                                 
+#> [11] "Restaurants"                                                                      
+#> [12] "Dunkin' owner Inspire Brands confidentially files for IPO"                        
+#> [13] ""                                                                                 
+#> [14] "Health and Science"                                                               
+#> [15] "Fitness wearable Whoop to offer on-demand clinician access to U.S. users"         
+#> [16] "Inside Wealth"                                                                    
+#> [17] "Trump's $1 million 'Gold Card' fails to catch on among the world's wealthy "      
+#> [18] "Inside Wealth"                                                                    
+#> [19] "States crack down on tax break for wealthy investors"                             
+#> [20] "CNBC Sport"                                                                       
+#> [21] "CNBC Sport: Media 'upfront' advertising presentations have become an NFL showcase"
+#> [22] ""                                                                                 
+#> [23] "Restaurants"                                                                      
+#> [24] "While many international brands retreat, McDonald’s is growing in China"          
+#> [25] ""                                                                                 
+#> [26] "Autos"                                                                            
+#> [27] "Used car prices fall for first time this year as gas prices spike"                
+#> [28] ""                                                                                 
+#> [29] "Restaurants"                                                                      
+#> [30] "McDonald's CEO says consumer spending could be 'getting a little bit worse'"      
+#> [31] "CNBC Property Play"
 ```
 
 ``` r
+
 # Load the data as a tibble (dataframe) and remove empty strings
 cnbc_df <- data.frame(headline = cnbc, stringsAsFactors = FALSE)
 cnbc_df <- cnbc_df[trimws(cnbc_df$headline) != "", , drop = FALSE]
@@ -75,15 +79,12 @@ results <- corporations::extract(
  )
 
 results
-#> # A tibble: 8 × 7
-#>   row_id headline      aliases                          cik ticker pattern match
-#>    <int> <chr>         <chr>                          <dbl> <chr>  <chr>   <chr>
-#> 1      5 Science       Science Corp                  1.87e6 ""     "\\b(?… Scie…
-#> 2      5 Science       Science Inc                   8.28e5 ""     "\\b(?… Scie…
-#> 3      7 CDC           Cdc Corp|China Com Corp|Chin… 1.08e6 "CDCA… "\\b(?… CDC  
-#> 4      7 CDC           Cdc Corp                      1.40e6 ""     "\\b(?… CDC  
-#> 5      9 Science       Science Corp                  1.87e6 ""     "\\b(?… Scie…
-#> 6      9 Science       Science Inc                   8.28e5 ""     "\\b(?… Scie…
-#> 7     15 PepsiCo       Pepsico Inc                   7.75e4 "PEP"  "\\b(?… Peps…
-#> 8     18 Goldman Sachs Goldman Sachs & Co Et Al|Gol… 7.70e5 ""     "\\b(?… Gold…
+#> # A tibble: 5 × 7
+#>   row_id headline aliases                              cik ticker pattern  match
+#>    <int> <chr>    <chr>                              <dbl> <chr>  <chr>    <chr>
+#> 1      2 YouTube  Youtube Inc                      1343726 ""     "\\b(?:… YouT…
+#> 2      8 Science  Science Corp                     1873836 ""     "\\b(?:… Scie…
+#> 3      8 Science  Science Inc                       828325 ""     "\\b(?:… Scie…
+#> 4      9 Whoop    Bobo Analytics, Inc.|Whoop, Inc. 1582746 ""     "\\b(?:… Whoop
+#> 5     12 Card     Card Corp                        1629260 ""     "\\b(?:… Card
 ```

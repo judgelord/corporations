@@ -34,6 +34,7 @@ devtools::install_github("judgelord/corporations")
 ```
 
 ``` r
+
 library(corporations)
 ```
 
@@ -49,6 +50,9 @@ ones. Note: package maintainers will need to approve suggestions before
 adding it to the real database of companies, which may take some time.
 [corporations-website](https://github.com/stevenhanwen/corporations-website)
 
+*The corporations data is currently not accessible through the website,
+due to server hosting issues*
+
 ## Text cleaning
 
 Before matching, by default, `clean_text()` from the
@@ -61,6 +65,7 @@ original input data. Users can disable this behavior by setting
 `do_clean_text = FALSE`.
 
 ``` r
+
 text <- "  HELLO---WORLD  "
 cleaned_text <- regextable::clean_text(text)
 print(cleaned_text)
@@ -150,6 +155,7 @@ Promise”. This shows one to one matching of corporations with names that
 are highly likely to be corporations, rather than semi-structured text.
 
 ``` r
+
 data("project_2025_coalition_and_contributors")
 head(project_2025_coalition_and_contributors)
 #>           type                        organization individual                  role
@@ -160,8 +166,6 @@ head(project_2025_coalition_and_contributors)
 #> 5 Organization                    American Compass            Advisory Board Member
 #> 6 Organization           The American Conservative            Advisory Board Member
 
-# Temporarily using load() function because real crosswalk is not pushed to Github
-load("data-raw/corporations_data.rda")
 head(corporations_data)
 #>                                                      aliases cik FED_RSSD ticker naics
 #> 1   Defined Asset Funds Municipal Invt Tr Fd New York Ser 33   3       NA           NA
@@ -184,6 +188,7 @@ companies, and more. If multiple patterns match the same text, multiple
 rows are returned, one per match.
 
 ``` r
+
 # Extract patterns using only required arguments and the default mode = "match"
 result <- corporations::extract(
   data = project_2025_coalition_and_contributors,
@@ -216,6 +221,7 @@ This data has been pre-processed with each sentence as a row inside the
 house_hearing_excerpt tibble.
 
 ``` r
+
 data("house_hearing_excerpt")
 head(house_hearing_excerpt)
 #> # A tibble: 6 × 1
@@ -238,6 +244,7 @@ pre-processed as a tibble with multiple rows. Otherwise, it will return
 the entire text data.
 
 ``` r
+
 # Extract patterns using only required arguments and the default mode = "match"
 result <- corporations::extract(
   data = house_hearing_excerpt,
@@ -288,6 +295,7 @@ companies.
   from the built-in corporations data (e.g., “FED_RSSD”, “CIK”).
 
 ``` r
+
 # Find public companies in the custom computer programming services sector (NAICS 541511) with stock tickers. 
 programming_services_public <- filter(naics_codes = c(541511), public_only = TRUE)
 head(programming_services_public)
