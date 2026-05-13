@@ -48,6 +48,9 @@ ones. Note: package maintainers will need to approve suggestions before
 adding it to the real database of companies, which may take some time.
 [corporations-website](https://github.com/stevenhanwen/corporations-website)
 
+*The corporations data is currently not accessible through the website,
+due to server hosting issues*
+
 ## Text cleaning
 
 Before matching, by default, `clean_text()` from the
@@ -158,8 +161,6 @@ head(project_2025_coalition_and_contributors)
 #> 5 Organization                    American Compass            Advisory Board Member
 #> 6 Organization           The American Conservative            Advisory Board Member
 
-# Temporarily using load() function because real crosswalk is not pushed to Github
-load("data-raw/corporations_data.rda")
 head(corporations_data)
 #>                                                      aliases cik FED_RSSD ticker naics
 #> 1   Defined Asset Funds Municipal Invt Tr Fd New York Ser 33   3       NA           NA
